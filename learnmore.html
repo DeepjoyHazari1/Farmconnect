@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works - FarmConnect</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .learn-hero {
+            background: linear-gradient(rgba(5, 163, 10, 0.8), rgba(56, 142, 60, 0.9)), ;
+            background-size: cover;
+            background-position: center;
+            color: rgb(8, 219, 61);
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .learn-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .learn-hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+
+        .steps-section {
+            padding: 80px 0;
+            background: #02e289;
+        }
+
+        .steps-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background: #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: rgb(11, 226, 119);
+            font-size: 2rem;
+        }
+
+       
+
+        .benefits-section {
+            padding: 80px 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .benefit-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #4CAF50;
+        }
+
+        .benefit-icon {
+            color: #4CAF50;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .faq-section {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .faq-question i {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 20px 20px;
+            max-height: 500px;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .stats-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .stat-item {
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .testimonials-section {
+            padding: 80px 0;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .testimonial-card:before
+         {
+            content: "";
+            font-size: 5rem;
+            color: #4CAF50;
+            opacity: 0.2;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+        }
+
+        .testimonial-text
+         {
+            font-style: italic;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+
+        .author-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cta-section {
+            padding: 100px 0;
+            background: linear-gradient(rgba(76, 175, 80, 0.9), rgba(56, 142, 60, 0.9)), url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .learn-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .step-card, .benefit-card {
+                padding: 20px;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-buttons .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+    <!-- Add this before your other script tags -->
+<script src="auth.js"></script>
+<script src="api-client.js"></script>
+<script src="dashboard.js"></script>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="learn-hero">
+        <div class="container">
+            <h1>How FarmConnect Works</h1>
+            <p>Transforming agricultural resource sharing with our easy-to-use platform. Connect with machinery owners and skilled labour in just a few clicks.</p>
+            <div class="hero-buttons">
+                <a href="#steps" class="btn btn-primary">Get Started</a>
+                <a href="register.html" class="btn btn-secondary">Join Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Steps Section -->
+    <section id="steps" class="steps-section">
+        <div class="steps-container">
+            <h2 class="section-title">Simple 4-Step Process</h2>
+            <p class="section-subtitle">From registration to completion, we've made the process straightforward for everyone</p>
+            
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-user-plus"></i>
+                        <div class="step-number">1</div>
+                    </div>
+                    <h3>Create Account</h3>
+                    <p>Sign up as a farmer, machinery owner, or skilled labourer. It takes less than 2 minutes to get started.</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-search"></i>
+                        <div class="step-number">2</div>
+                    </div>
+                    <h3>Search & Select</h3>
+                    <p>Find the right machinery or labour based on your location, budget, and specific requirements.</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-calendar-check"></i>
+                        <div class="step-number">3</div>
+                    </div>
+                    <h3>Book & Confirm</h3>
+                    <p>Select dates, review pricing, and confirm your booking with secure payment options.</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-tasks"></i>
+                        <div class="step-number">4</div>
+                    </div>
+                    <h3>Get Work Done</h3>
+                    <p>Connect with the service provider, complete your agricultural tasks, and provide feedback.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits-section">
+        <div class="container">
+            <h2 class="section-title">Benefits of Using FarmConnect</h2>
+            <p class="section-subtitle">Why thousands of farmers trust our platform for their agricultural needs</p>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3>Cost Effective</h3>
+                    <p>Save up to 60% compared to purchasing expensive machinery. Pay only for what you need, when you need it.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Time Saving</h3>
+                    <p>Find and book resources in minutes instead of days. Our platform connects you with verified providers instantly.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Verified Providers</h3>
+                    <p>All machinery owners and labourers are verified with proper documentation and user reviews.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Easy to Use</h3>
+                    <p>Simple interface designed specifically for farmers. No technical knowledge required.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Location Based</h3>
+                    <p>Find resources available in your local area to minimize transportation costs and time.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Our dedicated support team is available round the clock to assist with any issues or queries.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <h2 class="section-title">FarmConnect in Numbers</h2>
+            <p class="section-subtitle">Our impact on the agricultural community</p>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">750+</div>
+                    <p>Active Farmers</p>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">200+</div>
+                    <p>Machinery Listings</p>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">250+</div>
+                    <p>Skilled Labourers</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-subtitle">Find answers to common questions about FarmConnect</p>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do I register on FarmConnect?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Registration is simple! Click on the "Register" button at the top right corner, select your user type (Farmer, Machinery Owner, or Labourer), fill in your details, and verify your phone number. Your account will be activated immediately.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What types of machinery can I find on FarmConnect?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We have a wide range of agricultural machinery including tractors, harvesters, rotavators, ploughs, irrigation systems, sprayers, tillers, balers, and more. You can filter by type, power, location, and price range.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How are the labourers verified on your platform?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>All labourers undergo a verification process that includes identity proof, skill certification checks, and background verification. We also have a rating system where farmers can review their experience.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What payment methods are accepted?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We accept multiple payment options including UPI, credit/debit cards, net banking, and cash payments. For online payments, we use secure payment gateways with SSL encryption.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What if I need to cancel my booking?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>You can cancel your booking up to 24 hours before the scheduled date without any charges. For cancellations within 24 hours, a nominal fee may apply depending on the service provider's policy.</p>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <div class="container">
+            <h2 class="section-title">What Our Users Say</h2>
+            <p class="section-subtitle">Real stories from farmers who transformed their operations with FarmConnect</p>
+            
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"FarmConnect has revolutionized how I manage my farm. I found a reliable tractor operator within 2 hours of posting my requirement. The platform is easy to use even for someone like me who isn't tech-savvy."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Rajiv Mehta">
+                        </div>
+                        <div>
+                            <h4>Rajiv Mehta</h4>
+                            <p>Wheat Farmer, Nadia</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"As a machinery owner, FarmConnect has helped me earn extra income from my equipment that was sitting idle most of the time. The booking system is straightforward, and payments are secure and timely."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Amit Singh">
+                        </div>
+                        <div>
+                            <h4>Amit Singh</h4>
+                            <p>Machinery Owner, Kalyani</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"I've been working as a farm labourer for 15 years, but finding consistent work was always a challenge. With FarmConnect, I get regular bookings and can showcase my skills to a wider audience."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Sunita Devi">
+                        </div>
+                        <div>
+                            <h4>Sunita Devi</h4>
+                            <p>Harvesting Expert, Krishnanagar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Transform Your Farming Experience?</h2>
+            <p>Join thousands of farmers who are already benefiting from FarmConnect</p>
+            <div class="cta-buttons">
+                <a href="register.html" class="btn btn-primary btn-large">Sign Up Now</a>
+                <a href="contact.html" class="btn btn-secondary btn-large">Contact Us</a>
+            </div>
+        </div>
+    </section>
+
+   

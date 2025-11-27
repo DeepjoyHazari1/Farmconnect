@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmConnect - Agricultural Machinery & Labour Booking</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Color Variables */
+        :root {
+            --primary: #2E7D32;
+            --primary-dark: #1B5E20;
+            --primary-light: #4CAF50;
+            --secondary: #FF9800;
+            --secondary-dark: #F57C00;
+            --accent: #8BC34A;
+            --light: #F1F8E9;
+            --dark: #1B5E20;
+            --text: #212121;
+            --text-light: #757575;
+            --white: #FFFFFF;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            color: var(--text);
+            background-color: var(--white);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--dark);
+            font-size: 2.5rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--secondary);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        /* Updated Auth Button Styles */
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .auth-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            text-align: center;
+            font-size: 1rem;
+            border: 2px solid transparent;
+        }
+
+        .auth-login {
+            background-color: transparent;
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .auth-login:hover {
+            background-color: var(--primary);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(46, 125, 50, 0.3);
+        }
+
+        .auth-register {
+            background-color: var(--secondary);
+            color: var(--white);
+            border-color: var(--secondary);
+        }
+
+        .auth-register:hover {
+            background-color: var(--secondary-dark);
+            border-color: var(--secondary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 152, 0, 0.3);
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .nav-brand h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .nav-brand i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-link {
+            padding: 10px 15px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: var(--transition);
+            border-radius: 4px;
+            margin: 0 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            background-color: var(--light);
+        }
+
+        .nav-link.logout {
+            color: #f44336;
+        }
+
+        .nav-link.logout:hover {
+            background-color: #ffebee;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary);
+            margin: 3px 0;
+            transition: var(--transition);
+        }
+
+        /* User Profile Navigation Styles */
+        .user-profile-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info-nav {
+            text-align: right;
+        }
+
+        .user-name-nav {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .user-role-nav {
+            background: var(--primary-light);
+            color: var(--white);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            display: inline-block;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: var(--white);
+            padding: 100px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-content {
+            flex: 1;
+            padding-right: 50px;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat h3 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+
+        .stat p {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        /* SMS Booking Section - NEW */
+        .sms-booking {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--dark) 100%);
+            color: var(--white);
+        }
+
+        .sms-booking .section-title {
+            color: var(--white);
+        }
+
+        .sms-booking .section-title::after {
+            background: var(--secondary);
+        }
+
+        .sms-container {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .sms-content {
+            flex: 1;
+        }
+
+        .sms-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+
+        .sms-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .sms-features li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .sms-features li i {
+            color: var(--secondary);
+            margin-right: 15px;
+            margin-top: 5px;
+            font-size: 1.2rem;
+        }
+
+        .sms-commands {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        .sms-commands h4 {
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+
+        .command-example {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .sms-visual {
+            flex: 1;
+            text-align: center;
+        }
+
+        .sms-phone {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 20px;
+            display: inline-block;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .sms-screen {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 300px;
+            text-align: left;
+            color: var(--text);
+        }
+
+        .sms-message {
+            background: var(--primary-light);
+            color: var(--white);
+            padding: 10px 15px;
+            border-radius: 18px;
+            margin-bottom: 10px;
+            max-width: 80%;
+            font-size: 0.9rem;
+        }
+
+        .sms-message.incoming {
+            background: var(--light);
+            color: var(--text);
+            margin-left: auto;
+        }
+
+        .patent-badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--white);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 100px 0;
+            background-color: var(--light);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background-color: var(--white);
+            padding: 40px 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-card i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .service-card p {
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+
+        .service-card ul {
+            list-style: none;
+            text-align: left;
+        }
+
+        .service-card li {
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+
+        .service-card li i {
+            font-size: 1rem;
+            color: var(--accent);
+            margin-right: 10px;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background-color: var(--white);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 20px;
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .feature-item:hover {
+            background-color: var(--light);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            background-color: var(--primary-light);
+            color: var(--white);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .feature-icon i {
+            font-size: 1.5rem;
+        }
+
+        .feature-content h3 {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .feature-content p {
+            color: var(--text-light);
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 100px 0;
+            background: linear-gradient(to bottom, var(--light) 0%, var(--white) 100%);
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 10%;
+            right: 10%;
+            height: 4px;
+            background-color: var(--primary-light);
+            z-index: 1;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            padding: 0 15px;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background-color: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0 auto 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .step-content h3 {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .step-content p {
+            color: var(--text-light);
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 100px 0;
+            background-color: var(--light);
+        }
+
+        .testimonials-grid {
+            display: flex;
+            gap: 30px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            margin-bottom: 0;
+        }
+
+        .testimonial-card {
+            min-width: 350px;
+            flex: 0 0 350px;
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial-content {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .testimonial-content::before {
+            content: '"';
+            font-size: 4rem;
+            color: var(--primary-light);
+            position: absolute;
+            top: -20px;
+            left: -10px;
+            opacity: 0.3;
+            line-height: 1;
+        }
+
+        .testimonial-content p {
+            color: var(--text);
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+
+        .author-info h4 {
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .author-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 100px 0;
+            background-color: var(--white);
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .faq-item {
+            background-color: var(--light);
+            padding: 25px;
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .faq-item:hover {
+            background-color: #E8F5E9;
+            transform: translateY(-5px);
+        }
+
+        .faq-item h3 {
+            margin-bottom: 15px;
+            color: var(--dark);
+            font-size: 1.2rem;
+        }
+
+        .faq-item p {
+            color: var(--text-light);
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .cta-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--dark);
+            color: var(--white);
+            padding: 70px 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .footer-column h3, .footer-column h4 {
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+
+        .footer-column h3 i {
+            color: var(--secondary);
+            margin-right: 10px;
+        }
+
+        .footer-column p {
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--white);
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--secondary);
+            transform: translateY(-3px);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--secondary);
+            padding-left: 5px;
+        }
+
+        .contact-info li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .contact-info li i {
+            margin-right: 10px;
+            color: var(--secondary);
+            margin-top: 5px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Image Gallery Section */
+        .image-gallery-section {
+            width: 100%;
+            background: #f8f9fa;
+            padding: 60px 0 40px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .image-gallery-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .image-gallery-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            font-size: 2.3rem;
+            cursor: pointer;
+            z-index: 2;
+            box-shadow: 0 2px 10px rgba(46,125,50,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.85;
+            transition: background 0.2s;
+        }
+        .image-gallery-arrow:hover {
+            background: #2E7D32;
+        }
+        .image-gallery-arrow.left {
+            left: -70px;
+        }
+        .image-gallery-arrow.right {
+            right: -70px;
+        }
+        .image-gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 40px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #4CAF50 #f8f9fa;
+            scroll-behavior: smooth;
+            padding: 0 10px;
+        }
+        .gallery-image {
+            width: 520px;
+            height: 340px;
+            border-radius: 22px;
+            object-fit: cover;
+            box-shadow: 0 6px 24px rgba(46,125,50,0.15);
+            border: 4px solid #e8f5e8;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .gallery-image:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 40px rgba(46,125,50,0.22);
+            border-color: #4CAF50;
+        }
+        @media (max-width: 992px) {
+            .gallery-image {
+                width: 320px;
+                height: 200px;
+            }
+            .image-gallery-arrow {
+                width: 40px;
+                height: 40px;
+                font-size: 1.7rem;
+                left: -30px;
+                right: -30px;
+            }
+            .image-gallery-container {
+                gap: 20px;
+            }
+        }
+        @media (max-width: 768px) {
+            .gallery-image {
+                width: 160px;
+                height: 90px;
+            }
+            .image-gallery-arrow {
+                width: 28px;
+                height: 28px;
+                font-size: 1.1rem;
+                left: -10px;
+                right: -10px;
+            }
+            .image-gallery-container {
+                gap: 8px;
+            }
+        }
+    </style>
+<script src="auth.js"></script>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h2><i class="fas fa-tractor"></i> FarmConnect</h2>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="machinery.html" class="nav-link"><i class="fas fa-tractor"></i> Machinery</a></li>
+                <li><a href="labour.html" class="nav-link"><i class="fas fa-users"></i> Labour</a></li>
+                <li><a href="contact.html" class="nav-link"><i class="fas fa-envelope"></i> Contact</a></li>
+                
+                <!-- User Profile Navigation - Will be shown when logged in -->
+                <div id="userProfileNav" class="user-profile-nav" style="display: none;">
+                        <div class="user-info-nav">
+                            <div class="user-name-nav" id="userDisplayName"></div>
+                            <div class="user-role-nav" id="userDisplayRole"></div>
+                        </div>
+                    <li><a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="dashboard.html#profile" class="nav-link"><i class="fas fa-user-cog"></i> Profile Settings</a></li>
+                    <li><a href="dashboard.html#orders" class="nav-link"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
+                    <li><button class="nav-link logout" onclick="logout()" style="background: none; border: none; cursor: pointer;"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
+                </div>
+            </ul>
+            
+            <!-- Login/Register buttons (shown when not logged in) -->
+            <div id="authButtons" class="auth-buttons">
+                <a href="login.html" class="auth-btn auth-login">Login</a>
+                <a href="register.html" class="auth-btn auth-register">Register</a>
+            </div>
+            
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Image Gallery Section (Top Middle) -->
+    <section class="image-gallery-section">
+        <div class="image-gallery-wrapper">
+            <button class="image-gallery-arrow left" id="galleryLeft" aria-label="Previous image">&#8592;</button>
+            <div class="image-gallery-container" id="imageGallery">
+                <img src="assets/gallery1.jpg" alt="Tractor in field" class="gallery-image"
+                     onerror="this.src='https://cdn.tractorsdekho.com/in/john-deere/5050-d/john-deere-5050-d-53440.jpg'">
+                <img src="assets/gallery2.jpg" alt="Farmers working" class="gallery-image"
+                     onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGF_rnPk56tXeWH3DTPfP_7VJpsIlR0Ve6IQ&s'">
+                <img src="assets/gallery3.jpg" alt="Harvesting crops" class="gallery-image"
+                     onerror="this.src='https://mahindrafarmmachinery.com/sites/default/files/2024-12/8.%20Combine%20Harvester%20Working%2C%20Uses%2C%20and%20Importance-min%20%281%29_0.jpg'">
+                <img src="assets/gallery4.jpg" alt="Irrigation system" class="gallery-image"
+                     onerror="this.src='https://cpimg.tistatic.com/09971481/b/4/Kirloskar-Make-Diesel-Run-Supermono-Pumpset..jpg'">
+                <img src="assets/gallery5.jpg" alt="Labour team" class="gallery-image"
+                     onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR29IyiVKoKAkzCoYny1BgNhCElt44rMcm85w&s'">
+                      <img src="assets/gallery5.jpg" alt="Labour team" class="gallery-image"
+                     onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReiedeSU19IbxytNiet8K0Kj97a-o4LJ0mxQ&s'">
+            </div>
+            <button class="image-gallery-arrow right" id="galleryRight" aria-label="Next image">&#8594;</button>
+        </div>
+    </section>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Connect, Book, Farm Smarter</h1>
+                <p>Book agricultural machinery and skilled labour with just a few clicks. Make your farming operations more efficient and cost-effective.</p>
+                <div class="hero-buttons">
+                    <a href="register.html" class="btn btn-primary">Get Started</a>
+                    <a href="learnmore.html" class="btn btn-secondary">Learn More</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <h3>500+</h3>
+                        <p>Happy Farmers</p>
+                    </div>
+                    <div class="stat">
+                        <h3>200+</h3>
+                        <p>Machines Available</p>
+                    </div>
+                    <div class="stat">
+                        <h3>100+</h3>
+                        <p>Villages Served</p>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="assets/hero-farmer.png" alt="Farmer with technology" onerror="this.style.display='none'">
+            </div>
+        </div>
+    </section>
+
+    <!-- SMS Booking Section - NEW -->
+    <section id="sms-booking" class="sms-booking">
+        <div class="container">
+            <div class="patent-badge">PATENT PENDING TECHNOLOGY</div>
+            <h2 class="section-title">Offline SMS Booking</h2>
+            <p style="text-align: center; margin-bottom: 50px; font-size: 1.2rem; opacity: 0.9;">Revolutionizing agricultural access for farmers without smartphones</p>
+            <div class="sms-container">
+                <div class="sms-content">
+                    <h3>Book Machinery or Labour with Simple SMS Commands</h3>
+                    <p>FarmConnect enables booking via SMS for farmers with basic mobile phones. Just send a text to <strong>FARMCON (3276266)</strong>!</p>
+                    <ul class="sms-features">
+                        <li><i class="fas fa-check-circle"></i> No smartphone required</li>
+                        <li><i class="fas fa-check-circle"></i> Simple SMS commands</li>
+                        <li><i class="fas fa-check-circle"></i> Instant confirmation via SMS</li>
+                        <li><i class="fas fa-check-circle"></i> Multi-language support</li>
+                    </ul>
+                    <div class="sms-commands">
+                        <h4>Sample SMS Commands:</h4>
+                        <div class="command-example">BOOK TRACTOR 2024-12-15 KALYANI</div>
+                        <div class="command-example">LABOR HARVESTING 5 2024-12-20</div>
+                    </div>
+                    <a href="sms-guide.html" class="btn btn-secondary" style="margin-top:20px;">SMS Booking Guide</a>
+                </div>
+                <div class="sms-visual">
+                    <div class="sms-phone">
+                        <div class="sms-screen">
+                            <div class="sms-message">BOOK TRACTOR 2024-12-15 KALYANI</div>
+                            <div class="sms-message incoming">✅ Booking confirmed! Tractor booked for 2024-12-15 at KALYANI.</div>
+                            <div class="sms-message">LABOR HARVESTING 3 2024-12-20</div>
+                            <div class="sms-message incoming">✅ 3 labourers for harvesting booked for 2024-12-20.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <h2 class="section-title">Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-tractor"></i>
+                    <h3>Machinery Rental</h3>
+                    <p>Rent tractors, harvesters, ploughs, and other agricultural equipment from trusted owners in your area.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Verified equipment owners</li>
+                        <li><i class="fas fa-check"></i> Competitive pricing</li>
+                        <li><i class="fas fa-check"></i> Delivery options available</li>
+                    </ul>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Skilled Labour</h3>
+                    <p>Find experienced farm workers for planting, harvesting, irrigation, and other agricultural tasks.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Background verified workers</li>
+                        <li><i class="fas fa-check"></i> Skill-based matching</li>
+                        <li><i class="fas fa-check"></i> Daily/weekly/monthly hiring</li>
+                    </ul>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-calendar-check"></i>
+                    <h3>Easy Booking</h3>
+                    <p>Simple online booking system with date selection, price transparency, and secure payments.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Real-time availability</li>
+                        <li><i class="fas fa-check"></i> Instant confirmation</li>
+                        <li><i class="fas fa-check"></i> Multiple payment options</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+           <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose FarmConnect</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-rupee-sign"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Cost-Effective</h3>
+                        <p>Save up to 40% compared to traditional rental methods with our competitive pricing.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Verified Partners</h3>
+                        <p>All machinery owners and laborers are thoroughly verified for your safety and peace of mind.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Time-Saving</h3>
+                        <p>Find and book equipment or labor in minutes, not days. Focus on farming, not searching.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Easy to Use</h3>
+                        <p>Simple interface designed specifically for farmers with varying levels of tech experience.</p>
+                    </div>
+                </div>
+                
+                <!-- NEW: Machinery Repair Feature -->
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Machinery Repair</h3>
+                        <p>Expert repair services for all agricultural equipment with quick response times and genuine parts.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>24/7 Support</h3>
+                        <p>Our dedicated support team is available round the clock to assist with any issues.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Multi-Language</h3>
+                        <p>Available in Hindi, English, and regional languages to serve diverse farming communities.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>On-Site Service</h3>
+                        <p>Get machinery repairs done at your farm location to minimize downtime during critical seasons.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How FarmConnect Works</h2>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Create Your Account</h3>
+                        <p>Sign up as a farmer looking for services or as a provider offering machinery or labor.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Browse & Select</h3>
+                        <p>Search for available machinery or labor in your area based on your specific requirements.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Book & Confirm</h3>
+                        <p>Select your dates, review pricing, and confirm your booking with secure payment options.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Get to Work</h3>
+                        <p>Your machinery or labor will arrive as scheduled. Focus on what matters - your farm.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 50px;">
+                <h3 style="color: var(--primary); margin-bottom: 20px;">SMS Booking Alternative</h3>
+                <p style="max-width: 800px; margin: 0 auto; color: var(--text-light);">
+                    For farmers without internet access, simply send an SMS to <strong>FARMCON (3276266)</strong> with your booking details. 
+                    Our system will process your request and send confirmation via SMS within minutes.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Farmers Say About Us</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"FarmConnect has transformed how I manage my farm operations. I can now easily find tractors during peak season without any hassle."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h4>Rajesh Kumar</h4>
+                            <p>Farm Owner, Punjab</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"As a machinery owner, FarmConnect has helped me earn extra income from my equipment during idle periods. The payment system is secure and timely."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h4>Priya Singh</h4>
+                            <p>Tractor Owner, Uttar Pradesh</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"The SMS booking feature is revolutionary! I don't have a smartphone, but I can still book laborers for my farm with a simple text message."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h4>Baldev Singh</h4>
+                            <p>Traditional Farmer, Rajasthan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>How do I register on FarmConnect?</h3>
+                    <p>Registration is simple! Click on the "Register" button at the top of the page, fill in your details, and verify your phone number. You'll be ready to book in minutes.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>What types of machinery can I rent?</h3>
+                    <p>We offer a wide range of agricultural equipment including tractors, harvesters, ploughs, seeders, irrigation systems, and more specialized farming tools.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>How does the SMS booking work?</h3>
+                    <p>Simply send an SMS with your booking request to FARMCON (3276266). Use simple commands like "BOOK TRACTOR [date]" or "FIND LABOR [type]". Our system will process your request and send confirmation.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>What if I need to cancel a booking?</h3>
+                    <p>You can cancel bookings through your dashboard. Cancellation policies vary by provider, so please check the specific terms before confirming your booking.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>How are payments processed for SMS bookings?</h3>
+                    <p>For SMS bookings, payments can be made in cash directly to the service provider. We also support payment via UPI for those who have digital payment access.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Is the SMS service available in regional languages?</h3>
+                    <p>Yes! Our SMS service supports Hindi, Punjabi, Bengali, Tamil, Telugu, and Marathi. Simply start your message with the language code (e.g., "HI" for Hindi).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Transform Your Farming Experience?</h2>
+                <p>Join thousands of farmers who are already benefiting from FarmConnect's services - both online and via SMS.</p>
+                <div class="cta-buttons">
+                    <a href="register.html" class="btn btn-primary">Sign Up Now</a>
+                    <a href="sms-guide.html" class="btn btn-secondary">SMS Booking Guide</a>
+                </div>
+                <p style="margin-top: 20px; font-size: 1rem;">
+                    <strong>No smartphone? No problem!</strong> Text <strong>HELP</strong> to <strong>FARMCON (3276266)</strong> to get started with SMS booking.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3><i class="fas fa-tractor"></i> FarmConnect</h3>
+                    <p>Connecting farmers with agricultural machinery and skilled labor to make farming more efficient and profitable.</p>
+                    <div class="sms-info" style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <h4 style="color: var(--secondary); margin-bottom: 10px;">SMS Booking</h4>
+                        <p style="font-size: 0.9rem; margin-bottom: 5px;">Text <strong>FARMCON</strong> to</p>
+                        <p style="font-size: 1.1rem; font-weight: bold;">3276266</p>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#sms-booking">SMS Booking</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="machinery.html">Machinery Rental</a></li>
+                        <li><a href="labour.html">Labor Hiring</a></li>
+                        <li><a href="billing.html">Checkout</a></li>
+                        <li><a href="sms-booking.html">SMS Booking Guide</a></li>
+                        <li><a href="contact.html">Contact Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Contact Info</h4>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-envelope"></i> deepjoy1934@gmail.com</li>
+                        <li><i class="fas fa-phone"></i> +91 9862165134</li>
+                        <li><i class="fas fa-sms"></i> SMS: FARMCON to 3276266</li>
+                        <li><i class="fas fa-map-marker-alt"></i> JIS College of Engineering, Kalyani, West Bengal</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 FarmConnect. All rights reserved. | Final Year Project - JIS College of Engineering | Patent Pending: SMS-Based Agricultural Service Booking System</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple script for mobile menu toggle
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+
+        // Show/hide profile navigation based on actual session (no auto-login)
+        document.addEventListener('DOMContentLoaded', function() {
+            const userProfileNav = document.getElementById('userProfileNav');
+            const authButtons = document.getElementById('authButtons');
+            const userDisplayName = document.getElementById('userDisplayName');
+            const userDisplayRole = document.getElementById('userDisplayRole');
+
+            // Only use farmconnect_current_user or currentUser for session
+            let currentUser = null;
+            try {
+                if (typeof userSession !== 'undefined' && userSession.getCurrentUser) {
+                    currentUser = userSession.getCurrentUser();
+                }
+            } catch (e) {
+                console.warn('userSession.getCurrentUser failed:', e);
+            }
+
+            // Fallback to session key only (not remembered user)
+            if (!currentUser) {
+                const stored = localStorage.getItem('farmconnect_current_user') || localStorage.getItem('currentUser') || null;
+                if (stored) {
+                    try { currentUser = JSON.parse(stored); } catch (e) { currentUser = null; }
+                }
+            }
+
+            if (currentUser) {
+                // Populate display fields
+                userDisplayName.textContent = currentUser.fullname || currentUser.name || currentUser.email || '';
+                userDisplayRole.textContent = (currentUser.userType || currentUser.role || '')
+                    .toString()
+                    .replace(/_/g, ' ')
+                    .replace(/\b\w/g, c => c.toUpperCase());
+
+                if (userProfileNav) userProfileNav.style.display = 'flex';
+                if (authButtons) authButtons.style.display = 'none';
+            } else {
+                // No session: ensure logged-out UI
+                if (userProfileNav) userProfileNav.style.display = 'none';
+                if (authButtons) authButtons.style.display = 'flex';
+            }
+        });
+
+        function logout() {
+            if(confirm('Are you sure you want to logout?')) {
+                // Remove session keys from localStorage
+                localStorage.removeItem('farmconnect_current_user');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('farmconnect_remembered_user');
+                // Hide user profile, show auth buttons
+                document.getElementById('userProfileNav').style.display = 'none';
+                document.getElementById('authButtons').style.display = 'flex';
+                alert('Logged out successfully');
+                // Reload page to update UI
+                window.location.reload();
+            }
+        }
+
+        // Gallery arrow scroll functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const gallery = document.getElementById('imageGallery');
+            document.getElementById('galleryLeft').onclick = function() {
+                gallery.scrollBy({ left: -400, behavior: 'smooth' });
+            };
+            document.getElementById('galleryRight').onclick = function() {
+                gallery.scrollBy({ left: 400, behavior: 'smooth' });
+            };
+        });
+    </script>
+</body>
+</html>

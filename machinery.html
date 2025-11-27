@@ -1,0 +1,2482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agricultural Machinery - FarmConnect</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Colorful Navigation Bar */
+        .header {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50, #8BC34A);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .nav-brand h2 {
+            color: white;
+            margin: 0;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 25px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.active {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .cart-link {
+            position: relative;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+        
+        #cartCount {
+            background: #4d14dd;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+        
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* Enhanced Machinery Hero with Background Image */
+        .machinery-hero {
+            position: relative;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .machinery-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(135deg, rgba(46, 125, 50, 0.85), rgba(76, 175, 80, 0.85)),
+        url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Agricultural_machinery.jpg/960px-Agricultural_machinery.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+}
+        
+
+        .machinery-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            font-weight: 700;
+        }
+
+        .machinery-hero p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.2);
+            font-weight: 500;
+        }
+
+        /* Enhanced Search Section */
+        .search-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 30px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .search-filters {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .search-box {
+            display: flex;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .search-box:focus-within {
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            font-size: 1rem;
+            background: white;
+        }
+        
+        .search-input:focus {
+            outline: none;
+        }
+        
+        .search-btn {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-btn:hover {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+        }
+        
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .filter-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .filter-select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        /* Machinery Gallery Styles */
+        .machinery-gallery {
+            padding: 60px 0;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: #FF9800;
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .machinery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .machinery-item {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #ddd;
+        }
+
+        .machinery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .machinery-image {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+        }
+
+        .machinery-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .machinery-item:hover .machinery-image img {
+            transform: scale(1.05);
+        }
+
+        .availability-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .availability-badge.available {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .availability-badge.unavailable {
+            background: #f44336;
+            color: white;
+        }
+
+        .machinery-info {
+            padding: 25px;
+        }
+
+        /* Enhanced Card Styles */
+        .machinery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .machinery-header h3 {
+            margin: 0;
+            flex: 1;
+            color: #333;
+            font-size: 1.3rem;
+            line-height: 1.3;
+        }
+
+        .machinery-badge {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* Stats Grid */
+        .machinery-specs-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .spec-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .spec-item i {
+            color: #4CAF50;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .spec-value {
+            font-weight: 600;
+            color: #333;
+            display: block;
+        }
+
+        .spec-label {
+            font-size: 0.8rem;
+            color: #666;
+            display: block;
+        }
+
+        .machinery-location {
+            color: #666;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .machinery-location i {
+            color: #4CAF50;
+        }
+
+        .pricing-section {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            align-items: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+            border-radius: 8px;
+            border: 1px solid #c8e6c9;
+        }
+
+        .main-price {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #2E7D32;
+        }
+
+        .secondary-price {
+            color: #666;
+            font-size: 1rem;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        /* Description Section */
+        .machinery-description {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .machinery-description p {
+            margin: 0;
+            color: #555;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .machinery-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .feature-tag {
+            background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+            color: #2E7D32;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid #c8e6c9;
+            transition: all 0.3s ease;
+        }
+
+        .feature-tag:hover {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-full {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+        }
+
+        .cart-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-count {
+            background: #FF9800;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* Navigation Controls */
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-profile-nav {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        .user-avatar-nav {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-avatar-nav:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .user-info-nav {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name-nav {
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .user-role-nav {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.75rem;
+            margin: 0;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 8px 0;
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+            margin-top: 10px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .dropdown-menu.active {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f9fa;
+            color: #2E7D32;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: #f0f0f0;
+            margin: 8px 0;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .auth-btn {
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .auth-login {
+            color: white;
+            border: 2px solid white;
+            background: transparent;
+        }
+
+        .auth-login:hover {
+            background: white;
+            color: #2E7D32;
+        }
+
+        .auth-register {
+            background: white;
+            color: #2E7D32;
+            border: 2px solid white;
+        }
+
+        .auth-register:hover {
+            background: #4CAF50;
+            color: white;
+        }
+
+        /* Availability Checklist Styles */
+        .availability-checklist {
+            background: #f8f9fa;
+            padding: 30px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .availability-checklist h2 {
+            color: #2E7D32;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+
+        .availability-checklist label {
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .availability-checklist input[type="date"] {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            margin-right: 10px;
+        }
+
+        .availability-checklist button {
+            padding: 8px 18px;
+        }
+
+        .availability-checklist table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .availability-checklist th,
+        .availability-checklist td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .availability-checklist th {
+            background: #f2f2f2;
+            font-weight: 600;
+        }
+
+        .availability-checklist tr:hover {
+            background: #f1f1f1;
+        }
+
+        /* Location Filter Section */
+        #locationFilterSection {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+
+        #locationFilterSection h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.8rem;
+            color: #2E7D32;
+            text-align: center;
+        }
+
+        #locationFilterSection button {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        #locationFilterSection button:hover {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+        }
+
+        #map {
+            width: 100%;
+            height: 400px;
+            margin: 20px 0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* Location Options */
+        .location-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .location-option {
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .location-option:hover {
+            background: #e9ecef;
+        }
+
+        .location-option.active {
+            background: #e8f5e8;
+            border-color: #4CAF50;
+            color: #2E7D32;
+        }
+
+        /* Location Search Results */
+        .location-search-results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .distance-badge {
+            background: #FF9800;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .clear-location-filter {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: auto;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-wrap: wrap;
+            }
+            
+            .nav-menu {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 15px;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+            
+            .machinery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .machinery-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .machinery-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .machinery-badge {
+                align-self: flex-start;
+                margin-top: 5px;
+            }
+            
+            .nav-controls {
+                order: 3;
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 15px;
+                padding-top: 15px;
+                border-top: 1px solid rgba(255,255,255,0.2);
+            }
+            
+            .user-profile-nav {
+                flex-direction: column;
+                gap: 5px;
+                text-align: center;
+            }
+            
+            .auth-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            /* Availability Checklist */
+            .availability-checklist {
+                padding: 20px 0;
+            }
+
+            .availability-checklist h2 {
+                font-size: 1.5rem;
+            }
+
+            .availability-checklist label {
+                font-size: 0.9rem;
+            }
+
+            .availability-checklist input[type="date"] {
+                font-size: 0.9rem;
+            }
+
+            .availability-checklist button {
+                font-size: 0.9rem;
+                padding: 8px 16px;
+            }
+
+            .availability-checklist table {
+                font-size: 0.9rem;
+            }
+
+            /* Location Filter Section */
+            #locationFilterSection {
+                padding: 15px;
+            }
+
+            #locationFilterSection h3 {
+                font-size: 1.5rem;
+            }
+
+            #locationFilterSection button {
+                padding: 8px 16px;
+                font-size: 0.8rem;
+            }
+
+            #map {
+                height: 300px;
+            }
+
+            .location-options {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Add this before your other script tags -->
+    <script src="api-client.js"></script>
+<script src="dashboard.js"></script>
+   <header class="header">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h2><i class="fas fa-tractor"></i> FarmConnect</h2>
+        </div>
+        
+        <ul class="nav-menu" id="navMain">
+            <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="machinery.html" class="nav-link active"><i class="fas fa-tractor"></i> Machinery</a></li>
+            <li><a href="labour.html" class="nav-link"><i class="fas fa-users"></i> Labour</a></li>
+            <li><a href="contact.html" class="nav-link"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="billing.html" class="nav-link cart-link">
+                <i class="fas fa-shopping-cart"></i> Cart
+                <span id="cartCount">0</span>
+            </a></li>
+        </ul>
+        
+        <div class="nav-controls">
+            <!-- User Profile (shown when logged in) -->
+            <div id="userProfileNav" class="user-profile-nav" style="display: none;">
+                <div class="user-dropdown">
+                    <div class="user-avatar-nav" id="userAvatarNav">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="dropdown-menu" id="userDropdown">
+                        <a href="dashboard.html" class="dropdown-item">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                        <a href="dashboard.html#profile" class="dropdown-item">
+                            <i class="fas fa-user-cog"></i> Profile Settings
+                        </a>
+                        <a href="dashboard.html#orders" class="dropdown-item">
+                            <i class="fas fa-shopping-bag"></i> My Orders
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+                <div class="user-info-nav">
+                    <div class="user-name-nav" id="userNameNav">User Name</div>
+                    <div class="user-role-nav" id="userRoleNav">Farmer</div>
+                </div>
+            </div>
+            
+            <!-- Auth Buttons (shown when not logged in) -->
+            <div id="authButtons" class="auth-buttons" style="display: flex;">
+                <a href="login.html" class="auth-btn auth-login">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+                <a href="register.html" class="auth-btn auth-register">
+                    <i class="fas fa-user-plus"></i> Register
+                </a>
+            </div>
+        
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+</header>
+
+    <!-- Cart Notification -->
+    <div class="cart-notification" id="cartNotification">
+        <i class="fas fa-check-circle"></i>
+        <span>Item added to cart!</span>
+        <div class="cart-count" id="notificationCount">1</div>
+    </div>
+
+    <!-- Machinery Hero Section -->
+    <section class="machinery-hero">
+        <div class="container">
+            <h1>Agricultural Machinery Rental</h1>
+            <p>Browse and add machinery to your cart. Complete booking at checkout.</p>
+            <a href="#Machinery-list" class="btn btn-primary">Browse machinery</a>
+        </div>
+    </section>
+
+    <!-- Availability Checklist Section -->
+    <section class="availability-checklist" style="background:#f8f9fa; padding:30px 0; border-bottom:1px solid #eee;">
+        <div class="container" style="max-width:700px; margin:0 auto;">
+            <h2 style="color:#2E7D32; margin-bottom:18px; text-align:center;">
+                <i class="fas fa-calendar-check"></i> Availability Checklist
+            </h2>
+            <div style="display:flex; gap:15px; justify-content:center; align-items:center;">
+                <label for="checklistDate" style="font-weight:600;">Select Date:</label>
+                <input type="date" id="checklistDate" style="padding:8px; border-radius:6px; border:1px solid #ddd;">
+                <button id="checklistBtn" class="btn btn-primary" style="padding:8px 18px;">
+                    <i class="fas fa-search"></i> Show Availability
+                </button>
+            </div>
+            <div id="checklistResults" style="margin-top:25px;"></div>
+        </div>
+    </section>
+
+    <!-- Enhanced Search and Filter Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-filters">
+                <div class="search-box">
+                    <input type="text" placeholder="Search machinery by name, brand, or type..." class="search-input" id="searchInput">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label>Machinery Type:</label>
+                        <select class="filter-select" id="typeFilter">
+                            <option value="">All Types</option>
+                            <option value="tractor">Tractor</option>
+                            <option value="harvester">Harvester</option>
+                            <option value="plough">Plough</option>
+                            <option value="cultivator">Cultivator</option>
+                            <option value="irrigation">Irrigation System</option>
+                            <option value="sprayer">Sprayer</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Location:</label>
+                        <select class="filter-select" id="locationFilter">
+                            <option value="">All Locations</option>
+                            <option value="kalyani">Kalyani</option>
+                            <option value="nadia">Nadia</option>
+                            <option value="krishnanagar">Krishnanagar</option>
+                            <option value="ranaghat">Ranaghat</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Price Range:</label>
+                        <select class="filter-select" id="priceFilter">
+                            <option value="">Any Price</option>
+                            <option value="0-500">₹0-500/day</option>
+                            <option value="501-1000">₹501-1000/day</option>
+                            <option value="1001-2000">₹1001-2000/day</option>
+                            <option value="2001+">₹2001+/day</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Filter Section -->
+    <section id="locationFilterSection">
+        <div class="container">
+            <h3>Find Machinery Near You</h3>
+            <button onclick="getUserLocation()">Use My Location</button>
+            <input type="text" id="locationInput" placeholder="Enter city or pincode">
+            <button onclick="filterByLocation()">Search</button>
+            
+            <!-- Location Options -->
+            <div class="location-options">
+                <div class="location-option" data-location="kalyani">Kalyani</div>
+                <div class="location-option" data-location="nadia">Nadia</div>
+                <div class="location-option" data-location="krishnanagar">Krishnanagar</div>
+                <div class="location-option" data-location="ranaghat">Ranaghat</div>
+                <div class="location-option" data-location="shantipur">Shantipur</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Search Results -->
+    <div id="locationSearchResults" class="location-search-results" style="display: none;"></div>
+
+    <!-- Map Section -->
+    <div id="map"></div>
+
+    <!-- Machinery Gallery Section -->
+    <section class="machinery-gallery">
+        <div class="container">
+            <h2 class="section-title">Available Machinery</h2>
+            <p class="section-subtitle">Add machinery to cart and complete booking at checkout</p>
+            
+            <div class="machinery-grid" id="machineryGrid">
+                <!-- Tractor 1 -->
+                <div class="machinery-item" data-type="tractor" data-location="kalyani" data-price="800">
+                    <div class="machinery-image">
+                        <img src="assets/tractor1.jpg" alt="John Deere 5050D Tractor" 
+                             style="width: 100%; height: 250px; object-fit: cover;"
+                             onerror="this.src='https://cdn.tractorsdekho.com/in/john-deere/5050-d/john-deere-5050-d-53440.jpg'">
+                        <div class="availability-badge available">Available</div>
+                    </div>
+                    <div class="machinery-info">
+                        <div class="machinery-header">
+                            <h3>John Deere 5050D</h3>
+                            <div class="machinery-badge">Premium Tractor</div>
+                        </div>
+                        
+                        <div class="machinery-specs-grid">
+                            <div class="spec-item">
+                                <i class="fas fa-horse-head"></i>
+                                <div>
+                                    <span class="spec-value">45 HP</span>
+                                    <span class="spec-label">Power</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-gas-pump"></i>
+                                <div>
+                                    <span class="spec-value">Diesel</span>
+                                    <span class="spec-label">Fuel Type</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-cogs"></i>
+                                <div>
+                                    <span class="spec-value">4WD</span>
+                                    <span class="spec-label">Drive</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="machinery-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Kalyani, Nadia</span>
+                        </div>
+
+                        <div class="pricing-section">
+                            <div class="main-price">₹800/day</div>
+                            <div class="secondary-price">₹200/hour</div>
+                        </div>
+
+                        <div class="machinery-description">
+                            <p>Reliable and efficient tractor perfect for various farming operations. Features power steering and comfortable ROPS cabin for long working hours.</p>
+                        </div>
+
+                        <div class="machinery-features">
+                            <span class="feature-tag">Power Steering</span>
+                            <span class="feature-tag">ROPS Cabin</span>
+                            <span class="feature-tag">3-Point Hitch</span>
+                            <span class="feature-tag">Easy Maintenance</span>
+                        </div>
+
+                        <button class="btn btn-primary btn-full add-to-cart" 
+                                data-id="john-deere-5050d"
+                                data-name="John Deere 5050D Tractor"
+                                data-price="800"
+                                data-type="machinery"
+                                data-image="https://cdn.tractorsdekho.com/in/john-deere/5050-d/john-deere-5050-d-53440.jpg">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+
+                        <div class="check-availability-section" style="margin-top:15px;">
+                            <input type="date" class="availability-date" style="padding:8px; border-radius:6px; border:1px solid #ddd;">
+                            <button class="btn btn-secondary check-availability-btn" style="margin-left:8px;">
+                                <i class="fas fa-calendar-check"></i> Check Availability
+                            </button>
+                            <span class="availability-result" style="margin-left:10px; font-weight:bold;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tractor 2 -->
+                <div class="machinery-item" data-type="tractor" data-location="nadia" data-price="1200">
+                    <div class="machinery-image">
+                        <img src="assets/tractor2.jpg" alt="Mahindra 6050 Tractor" 
+                             style="width: 100%; height: 250px; object-fit: cover;"
+                             onerror="this.src='https://www.mahindratractor.com/sites/default/files/2024-07/ARJUN-NOVO-605-DI%E2%80%93i-4WD-Desktop_1.webp'">
+                        <div class="availability-badge available">Available</div>
+                    </div>
+                    <div class="machinery-info">
+                        <div class="machinery-header">
+                            <h3>Mahindra 6050</h3>
+                            <div class="machinery-badge">Heavy Duty</div>
+                        </div>
+                        
+                        <div class="machinery-specs-grid">
+                            <div class="spec-item">
+                                <i class="fas fa-horse-head"></i>
+                                <div>
+                                    <span class="spec-value">60 HP</span>
+                                    <span class="spec-label">Power</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-gas-pump"></i>
+                                <div>
+                                    <span class="spec-value">Diesel</span>
+                                    <span class="spec-label">Fuel Type</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-cogs"></i>
+                                <div>
+                                    <span class="spec-value">4WD</span>
+                                    <span class="spec-label">Drive</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="machinery-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Nadia District</span>
+                        </div>
+
+                        <div class="pricing-section">
+                            <div class="main-price">₹1200/day</div>
+                            <div class="secondary-price">₹300/hour</div>
+                        </div>
+
+                        <div class="machinery-description">
+                            <p>Powerful heavy-duty tractor with AC cabin for comfortable operation in all weather conditions. Perfect for large-scale farming operations.</p>
+                        </div>
+
+                        <div class="machinery-features">
+                            <span class="feature-tag">AC Cabin</span>
+                            <span class="feature-tag">Heavy Duty</span>
+                            <span class="feature-tag">Multi-speed</span>
+                            <span class="feature-tag">Climate Control</span>
+                        </div>
+
+                        <button class="btn btn-primary btn-full add-to-cart"
+                                data-id="mahindra-6050"
+                                data-name="Mahindra 6050 Tractor"
+                                data-price="1200"
+                                data-type="machinery"
+                                data-image="https://www.mahindratractor.com/sites/default/files/2024-07/ARJUN-NOVO-605-DI%E2%80%93i-4WD-Desktop_1.webp">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+
+                        <div class="check-availability-section" style="margin-top:15px;">
+                            <input type="date" class="availability-date" style="padding:8px; border-radius:6px; border:1px solid #ddd;">
+                            <button class="btn btn-secondary check-availability-btn" style="margin-left:8px;">
+                                <i class="fas fa-calendar-check"></i> Check Availability
+                            </button>
+                            <span class="availability-result" style="margin-left:10px; font-weight:bold;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Power Tiller -->
+                <div class="machinery-item" data-type="cultivator" data-location="kalyani" data-price="400">
+                    <div class="machinery-image">
+                        <img src="assets/power-tiller.jpg" alt="Power Tiller" 
+                             style="width: 100%; height: 250px; object-fit: cover;"
+                             onerror="this.src='https://naturetouch.co.in/wp-content/uploads/2021/11/kubota-pem140di-power-tilleR1.jpg'">
+                        <div class="availability-badge available">Available</div>
+                    </div>
+                    <div class="machinery-info">
+                        <div class="machinery-header">
+                            <h3>Kubota PEM140DI Power Tiller</h3>
+                            <div class="machinery-badge">Compact</div>
+                        </div>
+                        
+                        <div class="machinery-specs-grid">
+                            <div class="spec-item">
+                                <i class="fas fa-horse-head"></i>
+                                <div>
+                                    <span class="spec-value">8 HP</span>
+                                    <span class="spec-label">Power</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-gas-pump"></i>
+                                <div>
+                                    <span class="spec-value">Diesel</span>
+                                    <span class="spec-label">Fuel Type</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-cogs"></i>
+                                <div>
+                                    <span class="spec-value">2-Wheel</span>
+                                    <span class="spec-label">Drive</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="machinery-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Kalyani, Nadia</span>
+                        </div>
+
+                        <div class="pricing-section">
+                            <div class="main-price">₹400/day</div>
+                            <div class="secondary-price">₹100/hour</div>
+                        </div>
+
+                        <div class="machinery-description">
+                            <p>Compact and fuel-efficient power tiller perfect for small to medium farms. Easy to handle and maneuver in tight spaces.</p>
+                        </div>
+
+                        <div class="machinery-features">
+                            <span class="feature-tag">Easy Handling</span>
+                            <span class="feature-tag">Fuel Efficient</span>
+                            <span class="feature-tag">Compact Size</span>
+                            <span class="feature-tag">Rotary Blades</span>
+                        </div>
+
+                        <button class="btn btn-primary btn-full add-to-cart"
+                                data-id="power-tiller"
+                                data-name="Kubota PEM140DI Power Tiller"
+                                data-price="400"
+                                data-type="machinery"
+                                data-image="https://naturetouch.co.in/wp-content/uploads/2021/11/kubota-pem140di-power-tilleR1.jpg">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+
+                        <div class="check-availability-section" style="margin-top:15px;">
+                            <input type="date" class="availability-date" style="padding:8px; border-radius:6px; border:1px solid #ddd;">
+                            <button class="btn btn-secondary check-availability-btn" style="margin-left:8px;">
+                                <i class="fas fa-calendar-check"></i> Check Availability
+                            </button>
+                            <span class="availability-result" style="margin-left:10px; font-weight:bold;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rotavator -->
+                <div class="machinery-item" data-type="cultivator" data-location="ranaghat" data-price="600">
+                    <div class="machinery-image">
+                        <img src="assets/rotavator.jpg" alt="Rotavator" 
+                             style="width: 100%; height: 250px; object-fit: cover;"
+                             onerror="this.src='https://cpimg.tistatic.com/07760628/b/4/Mahindra-Mini-Rotavator.jpg'">
+                        <div class="availability-badge available">Available</div>
+                    </div>
+                    <div class="machinery-info">
+                        <div class="machinery-header">
+                            <h3>Mahindra Mini Rotavator</h3>
+                            <div class="machinery-badge">Efficient</div>
+                        </div>
+                        
+                        <div class="machinery-specs-grid">
+                            <div class="spec-item">
+                                <i class="fas fa-horse-head"></i>
+                                <div>
+                                    <span class="spec-value">35-50 HP</span>
+                                    <span class="spec-label">Required Power</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-cogs"></i>
+                                <div>
+                                    <span class="spec-value">Gear Drive</span>
+                                    <span class="spec-label">Transmission</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-arrows-alt-h"></i>
+                                <div>
+                                    <span class="spec-value">6-8 Blades</span>
+                                    <span class="spec-label">Blade Count</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="machinery-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Ranaghat</span>
+                        </div>
+
+                        <div class="pricing-section">
+                            <div class="main-price">₹600/day</div>
+                            <div class="secondary-price">₹150/hour</div>
+                        </div>
+
+                        <div class="machinery-description">
+                            <p>Heavy-duty rotavator for efficient soil preparation. Features depth control and excellent soil pulverization for optimal seedbed preparation.</p>
+                        </div>
+
+                        <div class="machinery-features">
+                            <span class="feature-tag">Heavy Duty</span>
+                            <span class="feature-tag">Easy Hitch</span>
+                            <span class="feature-tag">Depth Control</span>
+                            <span class="feature-tag">Soil Pulverization</span>
+                        </div>
+
+                        <button class="btn btn-primary btn-full add-to-cart"
+                                data-id="rotavator"
+                                data-name="Mahindra Mini Rotavator"
+                                data-price="600"
+                                data-type="machinery"
+                                data-image="https://cpimg.tistatic.com/07760628/b/4/Mahindra-Mini-Rotavator.jpg">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+
+                        <div class="check-availability-section" style="margin-top:15px;">
+                            <input type="date" class="availability-date" style="padding:8px; border-radius:6px; border:1px solid #ddd;">
+                            <button class="btn btn-secondary check-availability-btn" style="margin-left:8px;">
+                                <i class="fas fa-calendar-check"></i> Check Availability
+                            </button>
+                            <span class="availability-result" style="margin-left:10px; font-weight:bold;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Disc Harrow -->
+                <div class="machinery-item" data-type="plough" data-location="shantipur" data-price="500">
+                    <div class="machinery-image">
+                        <img src="assets/disc-harrow.jpg" alt="Disc Harrow" 
+                             style="width: 100%; height: 250px; object-fit: cover;"
+                             onerror="this.src='https://mahindrafarmmachinery.com/sites/default/files/2024-01/Compact%20Disc%20harrow.jpg'">
+                        <div class="availability-badge available">Available</div>
+                    </div>
+                    <div class="machinery-info">
+                        <div class="machinery-header">
+                            <h3>Mahindra Compact Disc Harrow</h3>
+                            <div class="machinery-badge">Versatile</div>
+                        </div>
+                        
+                        <div class="machinery-specs-grid">
+                            <div class="spec-item">
+                                <i class="fas fa-horse-head"></i>
+                                <div>
+                                    <span class="spec-value">40-60 HP</span>
+                                    <span class="spec-label">Required Power</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-cogs"></i>
+                                <div>
+                                    <span class="spec-value">16 Discs</span>
+                                    <span class="spec-label">Disc Count</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-ruler-combined"></i>
+                                <div>
+                                    <span class="spec-value">6 Feet</span>
+                                    <span class="spec-label">Working Width</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="machinery-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Shantipur</span>
+                        </div>
+
+                        <div class="pricing-section">
+                            <div class="main-price">₹1200/day</div>
+                            <div class="secondary-price">₹120/hour</div>
+                        </div>
+
+                        <div class="machinery-description">
+                            <p>Versatile disc harrow for effective soil leveling and weed control. Heavy construction ensures durability and consistent performance.</p>
+                        </div>
+
+                        <div class="machinery-features">
+                            <span class="feature-tag">Heavy Construction</span>
+                            <span class="feature-tag">Adjustable Depth</span>
+                            <span class="feature-tag">Soil Leveling</span>
+                            <span class="feature-tag">Weed Control</span>
+                        </div>
+
+                        <button class="btn btn-primary btn-full add-to-cart"
+                                data-id="disc-harrow"
+                                data-name="Mahindra Compact Disc Harrow"
+                                data-price="500"
+                                data-type="machinery"
+                                data-image="https://mahindrafarmmachinery.com/sites/default/files/2024-01/Compact%20Disc%20harrow.jpg">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+
+                        <div class="check-availability-section" style="margin-top:15px;">
+                            <input type="date" class="availability-date" style="padding:8px; border-radius:6px; border:1px solid #ddd;">
+                            <button class="btn btn-secondary check-availability-btn" style="margin-left:8px;">
+                                <i class="fas fa-calendar-check"></i> Check Availability
+                            </button>
+                            <span class="availability-result" style="margin-left:10px; font-weight:bold;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Irrigation Pump -->
+                <div class="machinery-item" data-type="irrigation" data-location="ranaghat" data-price="300">
+                    <div class="machinery-image">
+                        <img src="assets/pump.jpg" alt="Water Pump" 
+                             style="width: 100%; height: 250px; object-fit: cover;"
+                             onerror="this.src='https://cpimg.tistatic.com/09971481/b/4/Kirloskar-Make-Diesel-Run-Supermono-Pumpset..jpg'">
+                        <div class="availability-badge available">Available</div>
+                    </div>
+                    <div class="machinery-info">
+                        <div class="machinery-header">
+                            <h3>Kirloskar Diesel Supermono Pumpset</h3>
+                            <div class="machinery-badge">High Flow</div>
+                        </div>
+                        
+                        <div class="machinery-specs-grid">
+                            <div class="spec-item">
+                                <i class="fas fa-bolt"></i>
+                                <div>
+                                    <span class="spec-value">5 HP</span>
+                                    <span class="spec-label">Power</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-gas-pump"></i>
+                                <div>
+                                    <span class="spec-value">Diesel</span>
+                                    <span class="spec-label">Fuel Type</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-water"></i>
+                                <div>
+                                    <span class="spec-value">1000 LPM</span>
+                                    <span class="spec-label">Flow Rate</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="machinery-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Ranaghat</span>
+                        </div>
+
+                        <div class="pricing-section">
+                            <div class="main-price">₹300/day</div>
+                            <div class="secondary-price">₹50/hour</div>
+                        </div>
+
+                        <div class="machinery-description">
+                            <p>Portable diesel pump with high flow rate perfect for irrigation needs. Easy start mechanism and reliable performance in various conditions.</p>
+                        </div>
+
+                        <div class="machinery-features">
+                            <span class="feature-tag">Portable</span>
+                            <span class="feature-tag">High Flow</span>
+                            <span class="feature-tag">Easy Start</span>
+                            <span class="feature-tag">Durable</span>
+                        </div>
+
+                        <button class="btn btn-primary btn-full add-to-cart"
+                                data-id="water-pump"
+                                data-name="Kirloskar Diesel Supermono Pumpset"
+                                data-price="300"
+                                data-type="machinery"
+                                data-image="https://cpimg.tistatic.com/09971481/b/4/Kirloskar-Make-Diesel-Run-Supermono-Pumpset..jpg">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+
+                        <div class="check-availability-section" style="margin-top:15px;">
+                            <input type="date" class="availability-date" style="padding:8px; border-radius:6px; border:1px solid #ddd;">
+                            <button class="btn btn-secondary check-availability-btn" style="margin-left:8px;">
+                                <i class="fas fa-calendar-check"></i> Check Availability
+                            </button>
+                            <span class="availability-result" style="margin-left:10px; font-weight:bold;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sprayer -->
+                <div class="machinery-item" data-type="sprayer" data-location="shantipur" data-price="400">
+                    <div class="machinery-image">
+                        <img src="assets/sprayer.jpg" alt="Power Sprayer" 
+                             style="width: 100%; height: 300px; object-fit: cover;"
+                             onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReiedeSU19IbxytNiet8K0Kj97a-o4LJ0mxQ&s'">
+                        <div class="availability-badge available">Available</div>
+                    </div>
+                    <div class="machinery-info">
+                        <div class="machinery-header">
+                            <h3>Honda GX-35 Power Sprayer</h3>
+                            <div class="machinery-badge">Portable</div>
+                        </div>
+                        
+                        <div class="machinery-specs-grid">
+                            <div class="spec-item">
+                                <i class="fas fa-gas-pump"></i>
+                                <div>
+                                    <span class="spec-value">Petrol</span>
+                                    <span class="spec-label">Fuel Type</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-reservoir"></i>
+                                <div>
+                                    <span class="spec-value">20L Tank</span>
+                                    <span class="spec-label">Capacity</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-compress-arrows-alt"></i>
+                                <div>
+                                    <span class="spec-value">High Pressure</span>
+                                    <span class="spec-label">Spray Type</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="machinery-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Shantipur</span>
+                        </div>
+
+                        <div class="pricing-section">
+                            <div class="main-price">₹500/day</div>
+                            <div class="secondary-price">₹100/hour</div>
+                        </div>
+
+                        <div class="machinery-description">
+                            <p>Backpack-style power sprayer with adjustable nozzle for precise pesticide application. Comfortable and easy to operate.</p>
+                        </div>
+
+                        <div class="machinery-features">
+                            <span class="feature-tag">Adjustable Nozzle</span>
+                            <span class="feature-tag">Easy to Use</span>
+                            <span class="feature-tag">Comfortable</span>
+                        </div>
+
+                        <button class="btn btn-primary btn-full add-to-cart"
+                                data-id="sprayer"
+                                data-name="Honda GX-35 Power Sprayer"
+                                data-price="400"
+                                data-type="machinery"
+                                data-image="https://krishitool.com/admin/assets/upload_img/product_img/product_img_22-8-2021-1632302170958.jpg">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+
+                        <div class="check-availability-section" style="margin-top:15px;">
+                            <input type="date" class="availability-date" style="padding:8px; border-radius:6px; border:1px solid #ddd;">
+                            <button class="btn btn-secondary check-availability-btn" style="margin-left:8px;">
+                                <i class="fas fa-calendar-check"></i> Check Availability
+                            </button>
+                            <span class="availability-result" style="margin-left:10px; font-weight:bold;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Harvester -->
+                <div class="machinery-item" data-type="harvester" data-location="krishnanagar" data-price="2500">
+                    <div class="machinery-image">
+                        <img src="assets/harvester1.jpg" alt="Combine Harvester" 
+                             style="width: 100%; height: 250px; object-fit: cover;"
+                             onerror="this.src='https://mahindrafarmmachinery.com/sites/default/files/2024-12/8.%20Combine%20Harvester%20Working%2C%20Uses%2C%20and%20Importance-min%20%281%29_0.jpg'">
+                        <div class="availability-badge available">Available</div>
+                    </div>
+                    <div class="machinery-info">
+                        <div class="machinery-header">
+                            <h3>swaraj 8200 Combine Harvester</h3>
+                            <div class="machinery-badge">Advanced</div>
+                        </div>
+                        <div class="machinery-specs-grid">
+                            <div class="spec-item">
+                                <i class="fas fa-horse-head"></i>
+                                <div>
+                                    <span class="spec-value">80 HP</span>
+                                    <span class="spec-label">Power</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-gas-pump"></i>
+                                <div>
+                                    <span class="spec-value">Diesel</span>
+                                    <span class="spec-label">Fuel Type</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-wheat-alt"></i>
+                                <div>
+                                    <span class="spec-value">Grain</span>
+                                    <span class="spec-label">Crop Type</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="machinery-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Krishnanagar</span>
+                        </div>
+
+                        <div class="pricing-section">
+                            <div class="main-price">₹2500/day</div>
+                            <div class="secondary-price">₹400/hour</div>
+                        </div>
+
+                        <div class="machinery-description">
+                            <p>Advanced combine harvester with auto-steering and grain tank for efficient harvesting operations. Includes straw chopper for residue management.</p>
+                        </div>
+
+                        <div class="machinery-features">
+                            <span class="feature-tag">Auto Steering</span>
+                            <span class="feature-tag">Grain Tank</span>
+                            <span class="feature-tag">Straw Chopper</span>
+                            <span class="feature-tag">Efficient</span>
+                        </div>
+
+                        <button class="btn btn-primary btn-full add-to-cart"
+                                data-id="combine-harvester"
+                                data-name="Swaraj Classic Combine Harvester"
+                                data-price="2500"
+                                data-type="machinery"
+                                data-image="https://mahindrafarmmachinery.com/sites/default/files/2024-12/8.%20Combine%20Harvester%20Working%2C%20Uses%2C%20and%20Importance-min%20%281%29_0.jpg">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+
+                        <div class="check-availability-section" style="margin-top:15px;">
+                            <input type="date" class="availability-date" style="padding:8px; border-radius:6px; border:1px solid #ddd;">
+                            <button class="btn btn-secondary check-availability-btn" style="margin-left:8px;">
+                                <i class="fas fa-calendar-check"></i> Check Availability
+                            </button>
+                            <span class="availability-result" style="margin-left:10px; font-weight:bold;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agricultural Drone -->
+                <div class="machinery-item" data-type="drone" data-location="kalyani" data-price="3500">
+                    <div class="machinery-image">
+                        <img src="https://vaimanikaaerospace.com/wp-content/uploads/2025/02/Agriculture-Drone.jpg" alt="Agricultural Drone"
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="availability-badge available">Available</div>
+                    </div>
+                    <div class="machinery-info">
+                        <div class="machinery-header">
+                            <h3>Vaimanika Agriculture Drone</h3>
+                            <div class="machinery-badge">Smart Farming</div>
+                        </div>
+                        <div class="machinery-specs-grid">
+                            <div class="spec-item">
+                                <i class="fas fa-broadcast-tower"></i>
+                                <div>
+                                    <span class="spec-value">Auto GPS</span>
+                                    <span class="spec-label">Navigation</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-battery-full"></i>
+                                <div>
+                                    <span class="spec-value">60 min</span>
+                                    <span class="spec-label">Flight Time</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-water"></i>
+                                <div>
+                                    <span class="spec-value">Spraying</span>
+                                    <span class="spec-label">Function</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="machinery-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Kalyani</span>
+                        </div>
+                        <div class="pricing-section">
+                            <div class="main-price">₹3500/day</div>
+                            <div class="secondary-price">₹700/hour</div>
+                        </div>
+                        <div class="machinery-description">
+                            <p>Advanced agricultural drone for crop spraying, monitoring, and precision farming. Automated flight paths and real-time data collection.</p>
+                        </div>
+                        <div class="machinery-features">
+                            <span class="feature-tag">GPS Navigation</span>
+                            <span class="feature-tag">Spraying</span>
+                            <span class="feature-tag">Real-time Data</span>
+                            <span class="feature-tag">Precision Farming</span>
+                        </div>
+                        <button class="btn btn-primary btn-full add-to-cart"
+                                data-id="agri-drone"
+                                data-name="Vaimanika Agriculture Drone"
+                                data-price="3500"
+                                data-type="machinery"
+                                data-image="https://vaimanikaaerospace.com/wp-content/uploads/2025/02/Agriculture-Drone.jpg">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+
+                        <div class="check-availability-section" style="margin-top:15px;">
+                            <input type="date" class="availability-date" style="padding:8px; border-radius:6px; border:1px solid #ddd;">
+                            <button class="btn btn-secondary check-availability-btn" style="margin-left:8px;">
+                                <i class="fas fa-calendar-check"></i> Check Availability
+                            </button>
+                            <span class="availability-result" style="margin-left:10px; font-weight:bold;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Solar Operated Pump -->
+                <div class="machinery-item" data-type="irrigation" data-location="nadia" data-price="900">
+                    <div class="machinery-image">
+                        <img src="https://5.imimg.com/data5/ET/CI/LO/SELLER-3310025/solar-powered-water-pump-500x500.jpg" alt="Solar Operated Pump"
+                             style="width: 100%; height: 250px; object-fit: cover;">
+                        <div class="availability-badge available">Available</div>
+                    </div>
+                    <div class="machinery-info">
+                        <div class="machinery-header">
+                            <h3>Solar Powered Water Pump</h3>
+                            <div class="machinery-badge">Eco-Friendly</div>
+                        </div>
+                        <div class="machinery-specs-grid">
+                            <div class="spec-item">
+                                <i class="fas fa-solar-panel"></i>
+                                <div>
+                                    <span class="spec-value">1.5 HP</span>
+                                    <span class="spec-label">Power</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-water"></i>
+                                <div>
+                                    <span class="spec-value">800 LPH</span>
+                                    <span class="spec-label">Flow Rate</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-leaf"></i>
+                                <div>
+                                    <span class="spec-value">Solar</span>
+                                    <span class="spec-label">Energy Source</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="machinery-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Nadia</span>
+                        </div>
+                        <div class="pricing-section">
+                            <div class="main-price">₹900/day</div>
+                            <div class="secondary-price">₹180/hour</div>
+                        </div>
+                        <div class="machinery-description">
+                            <p>Solar operated water pump for sustainable irrigation. Reduces electricity costs and works efficiently in remote areas.</p>
+                        </div>
+                        <div class="machinery-features">
+                            <span class="feature-tag">Solar Powered</span>
+                            <span class="feature-tag">Eco-Friendly</span>
+                            <span class="feature-tag">Low Maintenance</span>
+                            <span class="feature-tag">Remote Operation</span>
+                        </div>
+
+                        <button class="btn btn-primary btn-full add-to-cart"
+                                data-id="solar-pump"
+                                data-name="Solar Powered Water Pump"
+                                data-price="900"
+                                data-type="machinery"
+                                data-image="https://5.imimg.com/data5/ET/CI/LO/SELLER-3310025/solar-powered-water-pump-500x500.jpg">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+
+                        <div class="check-availability-section" style="margin-top:15px;">
+                            <input type="date" class="availability-date" style="padding:8px; border-radius:6px; border:1px solid #ddd;">
+                            <button class="btn btn-secondary check-availability-btn" style="margin-left:8px;">
+                                <i class="fas fa-calendar-check"></i> Check Availability
+                            </button>
+                            <span class="availability-result" style="margin-left:10px; font-weight:bold;"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map and Location-based Services Section -->
+    <div id="map" style="width:100%;height:400px;margin:20px 0;"></div>
+    <div id="machineryList">
+        <!-- Machinery items will be listed here -->
+    </div>
+
+    <script src="location.js"></script>
+
+    <script>
+        // Cart functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+            const cartCount = document.getElementById('cartCount');
+            const cartNotification = document.getElementById('cartNotification');
+            const notificationCount = document.getElementById('notificationCount');
+            const searchInput = document.getElementById('searchInput');
+            const typeFilter = document.getElementById('typeFilter');
+            const locationFilter = document.getElementById('locationFilter');
+            const priceFilter = document.getElementById('priceFilter');
+            const machineryItems = document.querySelectorAll('.machinery-item');
+            const machineryGrid = document.getElementById('machineryGrid');
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            const userProfileNav = document.getElementById('userProfileNav');
+            const authButtons = document.getElementById('authButtons');
+            const userDropdown = document.getElementById('userDropdown');
+            
+            // Initialize cart from localStorage - use the same key as labour page
+            let cart = JSON.parse(localStorage.getItem('farmconnect_cart')) || [];
+            updateCartCount();
+            
+            // Check user login state
+            checkUserLoginState();
+            
+            // Mobile menu toggle
+            hamburger.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                hamburger.classList.toggle('active');
+            });
+            
+            // User dropdown toggle
+            if (userProfileNav) {
+                userProfileNav.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('active');
+                });
+            }
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function() {
+                if (userDropdown) {
+                    userDropdown.classList.remove('active');
+                }
+            });
+            
+            // Add to cart functionality
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Check login before adding to cart
+                    const currentUser = localStorage.getItem('farmconnect_current_user') || localStorage.getItem('currentUser');
+                    if (!currentUser) {
+                        alert('Please login or register to book machinery.');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+
+                    const item = {
+                        id: this.getAttribute('data-id'),
+                        name: this.getAttribute('data-name'),
+                        price: parseInt(this.getAttribute('data-price')),
+                        type: this.getAttribute('data-type'),
+                        image: this.getAttribute('data-image'),
+                        quantity: 1
+                    };
+
+                    // Check if item already exists in cart
+                    const existingItem = cart.find(cartItem => cartItem.id === item.id);
+                    
+                    if (existingItem) {
+                        existingItem.quantity += 1;
+                    } else {
+                        cart.push(item);
+                    }
+
+                    // Save to localStorage - use the same key as labour page
+                    localStorage.setItem('farmconnect_cart', JSON.stringify(cart));
+                    
+                    // Update UI
+                    updateCartCount();
+                    showCartNotification(item.quantity);
+                    
+                    // Provide visual feedback
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-check"></i> Added to Cart';
+                    this.style.background = '#2E7D32';
+                    
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.style.background = '';
+                    }, 2000);
+                });
+            });
+
+            function updateCartCount() {
+                const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+                if (cartCount) {
+                    cartCount.textContent = totalItems;
+                }
+            }
+
+            function showCartNotification(quantity) {
+                if (notificationCount) {
+                    notificationCount.textContent = quantity;
+                }
+                if (cartNotification) {
+                    cartNotification.style.display = 'flex';
+                    
+                    setTimeout(() => {
+                        cartNotification.style.display = 'none';
+                    }, 3000);
+                }
+            }
+            
+            // Check user login state (support multiple localStorage keys used across pages)
+            function checkUserLoginState() {
+                // Support legacy/demo keys: 'currentUser', 'farmconnect_current_user', 'farmconnect_remembered_user'
+                let raw = localStorage.getItem('currentUser') || localStorage.getItem('farmconnect_current_user') || localStorage.getItem('farmconnect_remembered_user');
+                let currentUser = null;
+                try {
+                    currentUser = raw ? JSON.parse(raw) : null;
+                } catch (e) {
+                    currentUser = null;
+                }
+
+                if (currentUser && userProfileNav && authButtons) {
+                    // User is logged in
+                    userProfileNav.style.display = 'flex';
+                    authButtons.style.display = 'none';
+
+                    // Update user info
+                    updateUserInfo(currentUser);
+                } else if (userProfileNav && authButtons) {
+                    // User is not logged in
+                    userProfileNav.style.display = 'none';
+                    authButtons.style.display = 'flex';
+                }
+            }
+            
+            function updateUserInfo(user) {
+                const userAvatarNav = document.getElementById('userAvatarNav');
+                const userNameNav = document.getElementById('userNameNav');
+                const userRoleNav = document.getElementById('userRoleNav');
+
+                if (!user) return;
+
+                // Normalize common name fields
+                const displayName = user.fullname || user.name || user.username || 'User';
+                const role = user.userType || user.role || '';
+
+                // Update avatar: prefer profile image if available, otherwise show initials
+                if (userAvatarNav) {
+                    const imageUrl = user.profileImage || user.avatar || user.image || null;
+                    if (imageUrl) {
+                        userAvatarNav.innerHTML = `<img src="${imageUrl}" alt="${displayName}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+                    } else {
+                        const names = (displayName || 'User').split(' ');
+                        const initials = (names[0].charAt(0) + (names[1] ? names[1].charAt(0) : names[0].charAt(1))).toUpperCase();
+                        userAvatarNav.textContent = initials;
+                        userAvatarNav.style.fontSize = '1rem';
+                    }
+                }
+
+                if (userNameNav) {
+                    userNameNav.textContent = displayName;
+                }
+
+                if (userRoleNav) {
+                    userRoleNav.textContent = formatUserType(role);
+                }
+            }
+            
+            function formatUserType(userType) {
+                const typeMap = {
+                    'farmer': 'Farmer',
+                    'machinery_owner': 'Machinery Owner',
+                    'labour': 'Labour Provider',
+                    'admin': 'Administrator'
+                };
+                return typeMap[userType] || userType;
+            }
+            
+            // Search and filter functionality
+            function filterMachinery() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedType = typeFilter.value;
+                const selectedLocation = locationFilter.value;
+                const selectedPrice = priceFilter.value;
+                
+                machineryItems.forEach(item => {
+                    const name = item.querySelector('h3').textContent.toLowerCase();
+                    const type = item.getAttribute('data-type');
+                    const location = item.getAttribute('data-location');
+                    const price = parseInt(item.getAttribute('data-price'));
+                    
+                    const matchesSearch = name.includes(searchTerm);
+                    const matchesType = !selectedType || type === selectedType;
+                    const matchesLocation = !selectedLocation || location === selectedLocation;
+                    
+                    let matchesPrice = true;
+                    if (selectedPrice) {
+                        if (selectedPrice === '0-500') {
+                            matchesPrice = price <= 500;
+                        } else if (selectedPrice === '501-1000') {
+                            matchesPrice = price > 500 && price <= 1000;
+                        } else if (selectedPrice === '1001-2000') {
+                            matchesPrice = price > 1000 && price <= 2000;
+                        } else if (selectedPrice === '2001+') {
+                            matchesPrice = price > 2000;
+                        }
+                    }
+                    
+                    if (matchesSearch && matchesType && matchesLocation && matchesPrice) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+            
+            searchInput.addEventListener('input', filterMachinery);
+            typeFilter.addEventListener('change', filterMachinery);
+            locationFilter.addEventListener('change', filterMachinery);
+            priceFilter.addEventListener('change', filterMachinery);
+
+            // Helper: get static machinery info by id or name (fallback: first, second, third grid names)
+            function getStaticMachineryInfo(prod, idx) {
+                const gridItems = document.querySelectorAll('.machinery-item');
+                for (const item of gridItems) {
+                    const staticId = item.getAttribute('data-id');
+                    const staticName = item.querySelector('.machinery-header h3')?.textContent?.trim();
+                    const img = item.querySelector('.machinery-image img');
+                    if (
+                        (staticId && (staticId === prod._id || staticId === prod.id)) ||
+                        (staticName && prod.name && staticName.toLowerCase() === prod.name.toLowerCase())
+                    ) {
+                        // Also get availability badge text if present
+                        const badge = item.querySelector('.availability-badge');
+                        return {
+                            name: staticName || prod.name || 'Unnamed Machinery',
+                            image: img?.src || prod.images?.[0] || prod.image || 'https://via.placeholder.com/40x40?text=No+Image',
+                            gridAvailable: badge ? badge.classList.contains('available') : true
+                        };
+                    }
+                }
+                // Fallback: use first, second, third grid names for first 3 unmatched products
+                const fallbackNames = Array.from(document.querySelectorAll('.machinery-header h3')).map(e => e.textContent.trim());
+                const fallbackImages = Array.from(document.querySelectorAll('.machinery-image img')).map(e => e.src);
+                let fallbackIdx = idx % fallbackNames.length;
+                return {
+                    name: fallbackNames[fallbackIdx] || 'John Deere 5050D',
+                    image: fallbackImages[fallbackIdx] || 'assets/tractor1.jpg',
+                    gridAvailable: true
+                };
+            }
+
+            // Availability Checklist logic
+            const checklistBtn = document.getElementById('checklistBtn');
+            const checklistDate = document.getElementById('checklistDate');
+            const checklistResults = document.getElementById('checklistResults');
+
+            checklistBtn.onclick = function() {
+                const date = checklistDate.value;
+                if (!date) {
+                    checklistResults.innerHTML = '<span style="color:orange;">Please select a date.</span>';
+                    return;
+                }
+                checklistResults.innerHTML = '<span style="color:gray;">Checking availability...</span>';
+                fetch('/api/products')
+                    .then(res => res.json())
+                    .then(data => {
+                        const products = data.products || [];
+                        if (products.length === 0) {
+                            checklistResults.innerHTML = '<span style="color:red;">No machinery found.</span>';
+                            return;
+                        }
+                        Promise.all(products.map((prod, idx) => {
+                            const prodId = prod._id || prod.id || '';
+                            const info = getStaticMachineryInfo(prod, idx);
+                            if (!prodId) {
+                                return Promise.resolve({
+                                    name: info.name,
+                                    image: info.image,
+                                    available: false,
+                                    reason: 'Invalid ID',
+                                    id: '',
+                                    gridAvailable: info.gridAvailable
+                                });
+                            }
+                            return fetch(`/api/availability/check?machineryId=${prodId}&startDate=${date}&endDate=${date}`)
+                                .then(res => res.json())
+                                .then(avail => ({
+                                    name: info.name,
+                                    image: info.image,
+                                    // Show available if both grid and backend say available
+                                    available: (avail.available && info.gridAvailable),
+                                    reason: avail.reason || '',
+                                    id: prodId,
+                                    gridAvailable: info.gridAvailable
+                                }))
+                                .catch(() => ({
+                                    name: info.name,
+                                    image: info.image,
+                                    available: false,
+                                    reason: 'Error',
+                                    id: prodId,
+                                    gridAvailable: info.gridAvailable
+                                }));
+                        })).then(results => {
+                            checklistResults.innerHTML = `
+                                <table style="width:100%; border-collapse:collapse;">
+                                    <tr>
+                                        <th style="text-align:left; padding:8px;">Machinery</th>
+                                        <th style="text-align:left; padding:8px;">Status</th>
+                                    </tr>
+                                    ${results.map(r => `
+                                        <tr>
+                                            <td style="padding:8px;">
+                                                <img src="${r.image}" alt="${r.name}" style="width:40px; height:40px; object-fit:cover; border-radius:6px; margin-right:8px;">
+                                                ${r.name}
+                                            </td>
+                                            <td style="padding:8px;">
+                                                ${r.available
+                                                    ? '<span style="color:green;">Available</span>'
+                                                    : '<span style="color:red;">Not Available</span>'
+                                                }
+                                                ${!r.available && r.reason ? `<span style="color:#888;"> (${r.reason})</span>` : ''}
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </table>
+                            `;
+                        });
+                    })
+                    .catch(() => {
+                        checklistResults.innerHTML = '<span style="color:red;">Failed to load products.</span>';
+                    });
+            };
+
+            // Attach check availability logic to all machinery cards
+            function attachCheckAvailabilityHandlers() {
+                document.querySelectorAll('.machinery-item').forEach(card => {
+                    const btn = card.querySelector('.check-availability-btn');
+                    const dateInput = card.querySelector('.availability-date');
+                    const resultSpan = card.querySelector('.availability-result');
+                    const machineryId = card.querySelector('.view-calendar')?.getAttribute('data-machinery-id') || card.getAttribute('data-id');
+
+                    if (btn && dateInput && resultSpan) {
+                        btn.onclick = function() {
+                            const date = dateInput.value;
+                            if (!date) {
+                                resultSpan.textContent = 'Select a date!';
+                                resultSpan.style.color = 'orange';
+                                return;
+                            }
+                            btn.disabled = true;
+                            resultSpan.textContent = 'Checking...';
+                            resultSpan.style.color = 'gray';
+                            fetch(`/api/availability/check?machineryId=${machineryId}&startDate=${date}&endDate=${date}`)
+                                .then(res => res.json())
+                                .then(data => {
+                                    btn.disabled = false;
+                                    if (data.available) {
+                                        resultSpan.textContent = 'Available!';
+                                        resultSpan.style.color = 'green';
+                                    } else {
+                                        resultSpan.textContent = 'Not Available';
+                                        resultSpan.style.color = 'red';
+                                    }
+                                })
+                                .catch(() => {
+                                    btn.disabled = false;
+                                    resultSpan.textContent = 'Error!';
+                                    resultSpan.style.color = 'red';
+                                });
+                        };
+                    }
+                });
+            }
+
+            // After rendering machinery grid, call this:
+            attachCheckAvailabilityHandlers();
+
+            // Initialize location options
+            initializeLocationOptions();
+        });
+
+        // Location-based search functions
+        let selectedLocation = '';
+        let userLocation = null;
+
+        function initializeLocationOptions() {
+            const locationOptions = document.querySelectorAll('.location-option');
+            
+            locationOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    locationOptions.forEach(opt => opt.classList.remove('active'));
+                    
+                    // Add active class to clicked option
+                    this.classList.add('active');
+                    
+                    // Get selected location
+                    selectedLocation = this.getAttribute('data-location');
+                    
+                    // Filter machinery by location
+                    filterMachineryByLocation(selectedLocation);
+                    
+                    // Show results
+                    showLocationResults(selectedLocation);
+                });
+            });
+        }
+
+        function getUserLocation() {
+            if (navigator.geolocation) {
+                const locationBtn = document.querySelector('#locationFilterSection button');
+                locationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting Location...';
+                locationBtn.disabled = true;
+                
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        userLocation = {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
+                        };
+                        
+                        // Simulate finding nearby locations (in real app, you'd use geocoding API)
+                        findNearbyMachineryLocations(userLocation);
+                        
+                        locationBtn.innerHTML = 'Use My Location';
+                        locationBtn.disabled = false;
+                    },
+                    function(error) {
+                        alert('Unable to get your location. Please enable location services or select a location manually.');
+                        locationBtn.innerHTML = 'Use My Location';
+                        locationBtn.disabled = false;
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by your browser. Please select a location manually.');
+            }
+        }
+
+        function filterByLocation() {
+            const locationInput = document.getElementById('locationInput');
+            const location = locationInput.value.toLowerCase().trim();
+            
+            if (location) {
+                selectedLocation = location;
+                filterMachineryByLocation(selectedLocation);
+                showLocationResults(selectedLocation);
+            } else {
+                alert('Please enter a location to search.');
+            }
+        }
+
+        function filterMachineryByLocation(location) {
+            const machineryItems = document.querySelectorAll('.machinery-item');
+            
+            machineryItems.forEach(item => {
+                const itemLocation = item.getAttribute('data-location');
+                if (location === 'all' || itemLocation === location) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function showLocationResults(location) {
+            const resultsContainer = document.getElementById('locationSearchResults');
+            const count = document.querySelectorAll(`.machinery-item[data-location="${location}"]`).length;
+            
+            resultsContainer.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <strong>Location: ${formatLocationName(location)}</strong>
+                        <span class="distance-badge">${count} machines found</span>
+                    </div>
+                    <button class="clear-location-filter" onclick="clearLocationFilter()">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
+            `;
+            resultsContainer.style.display = 'block';
+        }
+
+        function findNearbyMachineryLocations(userCoords) {
+            // In a real application, you would:
+            // 1. Send user coordinates to your backend
+            // 2. Calculate distances to all machinery locations
+            // 3. Return sorted results by distance
+            
+            // For demo purposes, we'll simulate this
+            const nearbyLocations = ['kalyani', 'nadia']; // Simulated nearby locations
+            
+            if (nearbyLocations.length > 0) {
+                selectedLocation = nearbyLocations[0];
+                filterMachineryByLocation(selectedLocation);
+                
+                const resultsContainer = document.getElementById('locationSearchResults');
+                resultsContainer.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <strong>Nearby Locations Found</strong>
+                            <span class="distance-badge">Based on your location</span>
+                        </div>
+                        <div>
+                            ${nearbyLocations.map(loc => `
+                                <span class="location-option" style="display: inline-block; margin: 5px; padding: 5px 10px;" 
+                                      onclick="selectLocation('${loc}')">
+                                    ${formatLocationName(loc)}
+                                </span>
+                            `).join('')}
+                        </div>
+                        <button class="clear-location-filter" onclick="clearLocationFilter()">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                `;
+                resultsContainer.style.display = 'block';
+            }
+        }
+
+        function formatLocationName(location) {
+            const names = {
+                'kalyani': 'Kalyani',
+                'nadia': 'Nadia',
+                'krishnanagar': 'Krishnanagar',
+                'ranaghat': 'Ranaghat',
+                'shantipur': 'Shantipur'
+            };
+            return names[location] || location;
+        }
+
+        function selectLocation(location) {
+            const locationOptions = document.querySelectorAll('.location-option');
+            locationOptions.forEach(opt => {
+                if (opt.getAttribute('data-location') === location) {
+                    opt.click();
+                }
+            });
+        }
+
+        function clearLocationFilter() {
+            const locationOptions = document.querySelectorAll('.location-option');
+            locationOptions.forEach(opt => opt.classList.remove('active'));
+            
+            const resultsContainer = document.getElementById('locationSearchResults');
+            resultsContainer.style.display = 'none';
+            
+            selectedLocation = '';
+            
+            // Show all machinery
+            const machineryItems = document.querySelectorAll('.machinery-item');
+            machineryItems.forEach(item => {
+                item.style.display = 'block';
+            });
+        }
+
+        // Initialize map (basic implementation)
+        function initializeMap() {
+            // This is a basic implementation. In a real app, you would use Google Maps or Leaflet
+            const map = document.getElementById('map');
+            map.innerHTML = `
+                <div style="width:100%; height:100%; background:#e9ecef; display:flex; align-items:center; justify-content:center; color:#666;">
+                    <div style="text-align:center;">
+                        <i class="fas fa-map-marked-alt" style="font-size:3rem; margin-bottom:15px;"></i>
+                        <p>Interactive Map View</p>
+                        <p style="font-size:0.9rem;">(Map integration would show machinery locations here)</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize map when page loads
+        document.addEventListener('DOMContentLoaded', initializeMap);
+        
+        // Logout function - clear all known session keys
+        function logout() {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('farmconnect_current_user');
+            localStorage.removeItem('farmconnect_remembered_user');
+            localStorage.removeItem('token');
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - FarmConnect</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Dashboard Specific Styles */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 0;
+            min-height: 100vh;
+            background: #f8f9fa;
+        }
+
+        /* Sidebar */
+        .dashboard-sidebar {
+            background: linear-gradient(180deg, #1B5E20 0%, #2E7D32 100%);
+            color: white;
+            padding: 30px 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .user-profile {
+            text-align: center;
+            padding: 0 25px 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            border: 3px solid rgba(255,255,255,0.2);
+        }
+
+        .user-avatar i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .user-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .user-role {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.1);
+            padding: 4px 12px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu-item {
+            margin-bottom: 5px;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 25px;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-link:hover, .menu-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left-color: #FF9800;
+        }
+
+        .menu-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .menu-badge {
+            background: #FF9800;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        /* Main Content */
+        .dashboard-main {
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+            color: #1B5E20;
+            margin: 0;
+        }
+
+        .dashboard-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-icon.orders { background: linear-gradient(135deg, #4CAF50, #2E7D32); }
+        .stat-icon.bookings { background: linear-gradient(135deg, #2196F3, #1976D2); }
+        .stat-icon.favorites { background: linear-gradient(135deg, #FF9800, #F57C00); }
+        .stat-icon.pending { background: linear-gradient(135deg, #FFC107, #FFA000); }
+
+        .stat-content h3 {
+            font-size: 2rem;
+            margin: 0;
+            color: #1B5E20;
+        }
+
+        .stat-content p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Content Sections */
+        .dashboard-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #1B5E20;
+            margin: 0;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Orders Table */
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .orders-table th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #1B5E20;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .orders-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .orders-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-confirmed { background: #E8F5E8; color: #2E7D32; }
+        .status-pending { background: #FFF3E0; color: #F57C00; }
+        .status-completed { background: #E3F2FD; color: #1976D2; }
+        .status-cancelled { background: #FFEBEE; color: #C62828; }
+
+        /* Recent Activity */
+        .activity-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 15px;
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f0f7f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4CAF50;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .activity-desc {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .activity-time {
+            color: #999;
+            font-size: 0.8rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .action-card {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .action-card:hover {
+            border-color: #4CAF50;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.15);
+        }
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* Profile Section Styles */
+        .profile-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2E7D32;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .change-photo-btn:hover {
+            background: #F57C00 !important;
+            transform: scale(1.1);
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: white;
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
+        }
+
+        .btn-outline:hover {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-sidebar {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                z-index: 1000;
+                transition: left 0.3s ease;
+                width: 280px;
+            }
+            
+            .dashboard-sidebar.active {
+                left: 0;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-main {
+                padding: 20px 15px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .dashboard-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .orders-table {
+                font-size: 0.9rem;
+            }
+            
+            .orders-table th,
+            .orders-table td {
+                padding: 10px 8px;
+            }
+            
+            .profile-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-picture-section {
+                text-align: center;
+            }
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+
+    <!-- Add this before your other script tags -->
+     <script src="api-client.js"></script>
+<script src="dashboard.js"></script>
+<script src="database.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar" id="sidebar">
+            <div class="user-profile">
+                <!-- Sidebar user info -->
+                <div class="user-avatar"> <!-- JS will fill initials here --> </div>
+                <div class="user-name">Loading...</div>
+                <div class="user-role">Farmer</div>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="#dashboard" class="menu-link" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#orders" class="menu-link" data-section="orders">
+                        <i class="fas fa-shopping-bag"></i>
+                        My Orders
+                        <span class="menu-badge" id="ordersCount">0</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#bookings" class="menu-link" data-section="bookings">
+                        <i class="fas fa-calendar-check"></i>
+                        Bookings
+                        <span class="menu-badge" id="bookingsCount">0</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#favorites" class="menu-link" data-section="favorites">
+                        <i class="fas fa-heart"></i>
+                        Favorites
+                        <span class="menu-badge" id="favoritesCount">0</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#profile" class="menu-link" data-section="profile">
+                        <i class="fas fa-user-cog"></i>
+                        Profile Settings
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#payments" class="menu-link" data-section="payments">
+                        <i class="fas fa-credit-card"></i>
+                        Payment Methods
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#notifications" class="menu-link" data-section="notifications">
+                        <i class="fas fa-bell"></i>
+                        Notifications
+                        <span class="menu-badge" id="notificationsCount">3</span>
+                    </a>
+                </li>
+                <li class="menu-item" style="margin-top: 30px;">
+                    <a href="index.html" class="menu-link">
+                        <i class="fas fa-home"></i>
+                        Back to Home
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="login.html" class="menu-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div>
+                    <h1 class="dashboard-title" id="pageTitle">Dashboard</h1>
+                    <p style="color: #666; margin: 5px 0 0;">Welcome back! Here's your farming overview.</p>
+                </div>
+                <div class="dashboard-actions">
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <button class="btn btn-outline" id="exportDataBtn">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                    <button class="btn btn-primary" id="newBookingBtn">
+                        <i class="fas fa-plus"></i> New Booking
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon orders">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalOrders">0</h3>
+                        <p>Total Orders</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bookings">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="activeBookings">0</h3>
+                        <p>Active Bookings</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon favorites">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="favoritesTotal">0</h3>
+                        <p>Favorite Items</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="pendingActions">0</h3>
+                        <p>Pending Actions</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders Section -->
+            <section class="dashboard-section" id="ordersSection">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Orders</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-outline" id="viewAllOrdersBtn">
+                            View All
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Item</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <!-- Orders will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="empty-state" id="emptyOrders" style="display: none;">
+                    <i class="fas fa-shopping-bag"></i>
+                    <h3>No Orders Yet</h3>
+                    <p>You haven't placed any orders yet. Start exploring our machinery and labor services!</p>
+                    <button class="btn btn-primary mt-20" id="browseMachineryBtn">
+                        <i class="fas fa-tractor"></i> Browse Machinery
+                    </button>
+                </div>
+            </section>
+
+            <!-- Recent Activity -->
+            <section class="dashboard-section" id="activitySection">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Activity</h2>
+                </div>
+                <ul class="activity-list" id="activityList">
+                    <!-- Activities will be populated by JavaScript -->
+                </ul>
+                <div class="empty-state" id="emptyActivity" style="display: none;">
+                    <i class="fas fa-history"></i>
+                    <h3>No Recent Activity</h3>
+                    <p>Your recent activities will appear here.</p>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="dashboard-section" id="quickActionsSection">
+                <div class="section-header">
+                    <h2 class="section-title">Quick Actions</h2>
+                </div>
+                <div class="quick-actions-grid">
+                    <div class="action-card" id="rentMachineryBtn">
+                        <div class="action-icon">
+                            <i class="fas fa-tractor"></i>
+                        </div>
+                        <h3>Rent Machinery</h3>
+                        <p>Browse and book agricultural equipment</p>
+                    </div>
+                    <div class="action-card" id="hireLaborBtn">
+                        <div class="action-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Hire Labor</h3>
+                        <p>Find skilled farm workers</p>
+                    </div>
+                    <div class="action-card" id="newBookingActionBtn">
+                        <div class="action-icon">
+                            <i class="fas fa-calendar-plus"></i>
+                        </div>
+                        <h3>New Booking</h3>
+                        <p>Schedule machinery or labor</p>
+                    </div>
+                    <div class="action-card" id="updateProfileBtn">
+                        <div class="action-icon">
+                            <i class="fas fa-user-edit"></i>
+                        </div>
+                        <h3>Update Profile</h3>
+                        <p>Manage your account details</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Settings Section -->
+            <section class="dashboard-section" id="profileSection" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">Profile Settings</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-outline" id="resetProfileBtn">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                        <button class="btn btn-primary" id="saveProfileBtn">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+
+                <div class="profile-content">
+                    <!-- Profile Picture -->
+                    <div class="profile-picture-section" style="text-align: center; margin-bottom: 40px;">
+                        <div class="profile-avatar-large" id="profileAvatarLarge" style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #4CAF50, #8BC34A); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; border: 4px solid #e0e0e0; position: relative; overflow: hidden;">
+                            <!-- Initials or profile image will be set by JS -->
+                            <span id="profileAvatarInitials" style="font-size: 3rem; color: white;"></span>
+                            <img id="profileAvatarImg" src="" alt="Profile Picture" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                            <input type="file" id="profilePhotoInput" accept="image/*" style="display:none;">
+                            <button class="change-photo-btn" id="changePhotoBtn" style="position: absolute; bottom: 5px; right: 5px; width: 35px; height: 35px; border-radius: 50%; background: #FF9800; border: none; color: white; cursor: pointer;">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                        <h3 id="profileUserName">Loading...</h3>
+                        <p style="color: #666;" id="profileUserRole">Farmer</p>
+                    </div>
+
+                    <!-- Profile Form -->
+                    <form id="profileForm">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px;">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-user"></i> First Name
+                                </label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-user"></i> Last Name
+                                </label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-envelope"></i> Email Address
+                            </label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-phone"></i> Phone Number
+                            </label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-map-marker-alt"></i> Address
+                            </label>
+                            <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-city"></i> City
+                                </label>
+                                <input type="text" class="form-control" id="city" name="city" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-map-pin"></i> Pincode
+                                </label>
+                                <input type="text" class="form-control" id="pincode" name="pincode" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-tractor"></i> User Type
+                            </label>
+                            <select class="form-control" id="userType" name="userType" required>
+                                <option value="farmer">Farmer</option>
+                                <option value="machinery_owner">Machinery Owner</option>
+                                <option value="labour">Skilled Labour</option>
+                            </select>
+                        </div>
+
+                        <!-- Farm Details (Visible only for Farmers) -->
+                        <div id="farmDetails" style="display: none;">
+                            <h4 style="color: #2E7D32; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;">
+                                <i class="fas fa-tractor"></i> Farm Details
+                            </h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+                                <div class="form-group">
+                                    <label class="form-label">Farm Name</label>
+                                    <input type="text" class="form-control" id="farmName" name="farmName">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Farm Size (acres)</label>
+                                    <input type="number" class="form-control" id="farmSize" name="farmSize">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Main Crops</label>
+                                <input type="text" class="form-control" id="mainCrops" name="mainCrops" placeholder="e.g., Rice, Wheat, Vegetables">
+                            </div>
+                        </div>
+
+                        <!-- Machinery Details (Visible only for Machinery Owners) -->
+                        <div id="machineryDetails" style="display: none;">
+                            <h4 style="color: #2196F3; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;">
+                                <i class="fas fa-tools"></i> Machinery Details
+                            </h4>
+                            <div class="form-group">
+                                <label class="form-label">Types of Machinery</label>
+                                <input type="text" class="form-control" id="machineryTypes" name="machineryTypes" placeholder="e.g., Tractor, Harvester, Rotavator">
+                            </div>
+                        </div>
+
+                        <!-- Labour Details (Visible only for Labour) -->
+                        <div id="labourDetails" style="display: none;">
+                            <h4 style="color: #FF9800; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;">
+                                <i class="fas fa-users"></i> Labour Details
+                            </h4>
+                            <div class="form-group">
+                                <label class="form-label">Skills</label>
+                                <input type="text" class="form-control" id="skills" name="skills" placeholder="e.g., Harvesting, Planting, Irrigation">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Experience (Years)</label>
+                                <input type="number" class="form-control" id="experience" name="experience" min="0" max="50">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Other Sections (Bookings, Favorites, Payments, Notifications) -->
+            <section class="dashboard-section" id="bookingsSection" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">My Bookings</h2>
+                </div>
+                <div class="empty-state">
+                    <i class="fas fa-calendar-check"></i>
+                    <h3>No Bookings Yet</h3>
+                    <p>Your upcoming and past bookings will appear here.</p>
+                    <button class="btn btn-primary mt-20" id="createBookingBtn">
+                        <i class="fas fa-plus"></i> Create Booking
+                    </button>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="favoritesSection" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">My Favorites</h2>
+                </div>
+                <div class="empty-state">
+                    <i class="fas fa-heart"></i>
+                    <h3>No Favorites Yet</h3>
+                    <p>Items you mark as favorite will appear here for quick access.</p>
+                    <button class="btn btn-primary mt-20" id="browseItemsBtn">
+                        <i class="fas fa-search"></i> Browse Items
+                    </button>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="paymentsSection" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">Payment Methods</h2>
+                </div>
+                <div class="empty-state">
+                    <i class="fas fa-credit-card"></i>
+                    <h3>No Payment Methods</h3>
+                    <p>Add your preferred payment methods for faster checkout.</p>
+                    <button class="btn btn-primary mt-20" id="addPaymentBtn">
+                        <i class="fas fa-plus"></i> Add Payment Method
+                    </button>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="notificationsSection" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">Notifications</h2>
+                </div>
+                <div class="empty-state">
+                    <i class="fas fa-bell"></i>
+                    <h3>No Notifications</h3>
+                    <p>You're all caught up! New notifications will appear here.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Dashboard JavaScript
+        class DashboardManager {
+            constructor() {
+                this.currentUser = this.getCurrentUser();
+                this.currentSection = 'dashboard';
+                this.init();
+            }
+
+            init() {
+                this.loadUserData();
+                this.setupEventListeners();
+                this.loadDashboardData();
+                this.setupNavigation();
+                
+                // Check authentication
+                if (!this.currentUser || !this.currentUser.userID) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+            }
+
+            getCurrentUser() {
+                try {
+                    const user = JSON.parse(localStorage.getItem('farmconnect_current_user'));
+                    if (!user) {
+                        // Create a default user for demo
+                        const defaultUser = {
+                            fullname: 'Rajesh Kumar',
+                            email: 'rajesh@example.com',
+                            phone: '+91 9876543210',
+                            address: 'Kalyani, Nadia, West Bengal',
+                            city: 'Kalyani',
+                            pincode: '741235',
+                            userType: 'farmer',
+                            userID: 'FC001',
+                            farmName: 'Kumar Farms',
+                            farmSize: '25',
+                            mainCrops: 'Rice, Wheat, Vegetables'
+                        };
+                        localStorage.setItem('farmconnect_current_user', JSON.stringify(defaultUser));
+                        return defaultUser;
+                    }
+                    return user;
+                } catch (error) {
+                    console.error('Error loading user data:', error);
+                    return null;
+                }
+            }
+
+            loadUserData() {
+                if (this.currentUser) {
+                    document.getElementById('userName').textContent = this.currentUser.fullname;
+                    document.getElementById('userRole').textContent = this.formatUserType(this.currentUser.userType);
+                }
+            }
+
+            formatUserType(userType) {
+                const types = {
+                    'farmer': 'Farmer',
+                    'machinery_owner': 'Machinery Owner',
+                    'labour': 'Skilled Labour'
+                };
+                return types[userType] || 'User';
+            }
+
+            setupEventListeners() {
+                // Mobile menu toggle
+                document.getElementById('mobileMenuToggle').addEventListener('click', () => {
+                    document.getElementById('sidebar').classList.toggle('active');
+                });
+
+                // Export Data button
+                document.getElementById('exportDataBtn').addEventListener('click', () => {
+                    this.exportData();
+                });
+
+                // New Booking button
+                document.getElementById('newBookingBtn').addEventListener('click', () => {
+                    this.createNewBooking();
+                });
+
+                // Quick action buttons
+                document.getElementById('rentMachineryBtn').addEventListener('click', () => {
+                    window.location.href = 'machinery.html';
+                });
+
+                document.getElementById('hireLaborBtn').addEventListener('click', () => {
+                    window.location.href = 'labour.html';
+                });
+
+                document.getElementById('newBookingActionBtn').addEventListener('click', () => {
+                    this.createNewBooking();
+                });
+
+                document.getElementById('updateProfileBtn').addEventListener('click', () => {
+                    this.showSection('profile');
+                });
+
+                document.getElementById('browseMachineryBtn').addEventListener('click', () => {
+                    window.location.href = 'machinery.html';
+                });
+
+                document.getElementById('viewAllOrdersBtn').addEventListener('click', () => {
+                    this.showSection('orders');
+                });
+
+                // Profile form buttons
+                document.getElementById('saveProfileBtn').addEventListener('click', () => {
+                    this.saveProfile();
+                });
+
+                document.getElementById('resetProfileBtn').addEventListener('click', () => {
+                    this.resetProfileForm();
+                });
+
+                document.getElementById('changePhotoBtn').addEventListener('click', () => {
+                    this.changeProfilePhoto();
+                });
+
+                // User type change listener
+                document.getElementById('userType').addEventListener('change', (e) => {
+                    this.toggleUserTypeDetails(e.target.value);
+                });
+
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    const sidebar = document.getElementById('sidebar');
+                    const toggle = document.getElementById('mobileMenuToggle');
+                    if (!sidebar.contains(e.target) && !toggle.contains(e.target) && sidebar.classList.contains('active')) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            }
+
+            setupNavigation() {
+                // Menu item clicks
+                const menuLinks = document.querySelectorAll('.menu-link');
+                menuLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const section = link.getAttribute('data-section');
+                        this.showSection(section);
+                        
+                        // Update active state
+                        menuLinks.forEach(l => l.classList.remove('active'));
+                        link.classList.add('active');
+                        
+                        // Close mobile menu
+                        document.getElementById('sidebar').classList.remove('active');
+                    });
+                });
+            }
+
+            showSection(section) {
+                this.currentSection = section;
+                document.getElementById('pageTitle').textContent = this.getSectionTitle(section);
+                
+                // Hide all sections
+                const sections = [
+                    'ordersSection', 'activitySection', 'quickActionsSection',
+                    'profileSection', 'bookingsSection', 'favoritesSection',
+                    'paymentsSection', 'notificationsSection'
+                ];
+                
+                sections.forEach(sec => {
+                    document.getElementById(sec).style.display = 'none';
+                });
+
+                // Show current section
+                switch(section) {
+                    case 'dashboard':
+                        document.getElementById('ordersSection').style.display = 'block';
+                        document.getElementById('activitySection').style.display = 'block';
+                        document.getElementById('quickActionsSection').style.display = 'block';
+                        break;
+                    case 'orders':
+                        document.getElementById('ordersSection').style.display = 'block';
+                        this.loadOrders();
+                        break;
+                    case 'profile':
+                        document.getElementById('profileSection').style.display = 'block';
+                        this.loadProfile();
+                        break;
+                    case 'bookings':
+                        document.getElementById('bookingsSection').style.display = 'block';
+                        break;
+                    case 'favorites':
+                        document.getElementById('favoritesSection').style.display = 'block';
+                        break;
+                    case 'payments':
+                        document.getElementById('paymentsSection').style.display = 'block';
+                        break;
+                    case 'notifications':
+                        document.getElementById('notificationsSection').style.display = 'block';
+                        break;
+                }
+            }
+
+            getSectionTitle(section) {
+                const titles = {
+                    'dashboard': 'Dashboard',
+                    'orders': 'My Orders',
+                    'bookings': 'Bookings',
+                    'favorites': 'Favorites',
+                    'profile': 'Profile Settings',
+                    'payments': 'Payment Methods',
+                    'notifications': 'Notifications'
+                };
+                return titles[section] || 'Dashboard';
+            }
+
+            loadDashboardData() {
+                this.loadOrders();
+                this.loadStats();
+                this.loadRecentActivity();
+            }
+
+            loadOrders() {
+                // Get orders from localStorage or use sample data
+                const orders = JSON.parse(localStorage.getItem('farmconnect_orders')) || this.getSampleOrders();
+                const tableBody = document.getElementById('ordersTableBody');
+                const emptyState = document.getElementById('emptyOrders');
+
+                if (orders.length === 0) {
+                    tableBody.innerHTML = '';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                emptyState.style.display = 'none';
+                
+                // Show only recent 5 orders
+                const recentOrders = orders.slice(0, 5);
+                
+                tableBody.innerHTML = recentOrders.map(order => `
+                    <tr>
+                        <td><strong>${order.orderId}</strong></td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 40px; height: 40px; background: #f0f0f0; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-${order.type === 'machinery' ? 'tractor' : 'users'}"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 500;">${order.itemName}</div>
+                                    <div style="font-size: 0.8rem; color: #666;">
+                                        ${order.duration} day(s)
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${this.formatDate(order.date)}</td>
+                        <td><strong>₹${order.amount}</strong></td>
+                        <td>
+                            <span class="status-badge status-${order.status}">
+                                ${order.status}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;" onclick="dashboardManager.viewOrder('${order.orderId}')">
+                                View
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            getSampleOrders() {
+                return [
+                    {
+                        orderId: 'FC001',
+                        itemName: 'John Deere Tractor',
+                        type: 'machinery',
+                        date: new Date().toISOString(),
+                        amount: 2500,
+                        status: 'confirmed',
+                        duration: 3
+                    },
+                    {
+                        orderId: 'FC002',
+                        itemName: 'Skilled Harvester',
+                        type: 'labour',
+                        date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                        amount: 1500,
+                        status: 'completed',
+                        duration: 2
+                    }
+                ];
+            }
+
+            loadStats() {
+                const orders = JSON.parse(localStorage.getItem('farmconnect_orders')) || this.getSampleOrders();
+                const favorites = JSON.parse(localStorage.getItem('farmconnect_favorites')) || [];
+                
+                document.getElementById('totalOrders').textContent = orders.length;
+                document.getElementById('activeBookings').textContent = orders.filter(o => o.status === 'confirmed').length;
+                document.getElementById('favoritesTotal').textContent = favorites.length;
+                document.getElementById('pendingActions').textContent = orders.filter(o => o.status === 'pending').length;
+
+                // Update menu badges
+                document.getElementById('ordersCount').textContent = orders.length;
+                document.getElementById('bookingsCount').textContent = orders.filter(o => o.status === 'confirmed').length;
+                document.getElementById('favoritesCount').textContent = favorites.length;
+            }
+
+            loadRecentActivity() {
+                const activities = [
+                    {
+                        icon: 'fa-shopping-cart',
+                        title: 'New Order Placed',
+                        description: 'You booked a tractor for your farm',
+                        time: '2 hours ago',
+                        type: 'order'
+                    },
+                    {
+                        icon: 'fa-user-check',
+                        title: 'Profile Updated',
+                        description: 'You updated your contact information',
+                        time: '1 day ago',
+                        type: 'profile'
+                    },
+                    {
+                        icon: 'fa-tractor',
+                        title: 'Machinery Viewed',
+                        description: 'You viewed John Deere 5050D tractor',
+                        time: '2 days ago',
+                        type: 'view'
+                    }
+                ];
+
+                const activityList = document.getElementById('activityList');
+                activityList.innerHTML = activities.map(activity => `
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas ${activity.icon}"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">${activity.title}</div>
+                            <div class="activity-desc">${activity.description}</div>
+                            <div class="activity-time">${activity.time}</div>
+                        </div>
+                    </li>
+                `).join('');
+            }
+
+            loadProfile() {
+                if (!this.currentUser) return;
+                
+                // Populate form fields
+                document.getElementById('profileUserName').textContent = this.currentUser.fullname;
+                document.getElementById('profileUserRole').textContent = this.formatUserType(this.currentUser.userType);
+                
+                // Split full name into first and last name
+                const names = (this.currentUser.fullname || '').split(' ');
+                document.getElementById('firstName').value = names[0] || '';
+                document.getElementById('lastName').value = names.slice(1).join(' ') || '';
+                
+                document.getElementById('email').value = this.currentUser.email || '';
+                document.getElementById('phone').value = this.currentUser.phone || '';
+                document.getElementById('address').value = this.currentUser.address || '';
+                document.getElementById('city').value = this.currentUser.city || '';
+                document.getElementById('pincode').value = this.currentUser.pincode || '';
+                document.getElementById('userType').value = this.currentUser.userType || 'farmer';
+                
+                // Load user type specific details
+                this.toggleUserTypeDetails(this.currentUser.userType);
+                
+                // Populate user type specific fields
+                if (this.currentUser.userType === 'farmer') {
+                    document.getElementById('farmName').value = this.currentUser.farmName || '';
+                    document.getElementById('farmSize').value = this.currentUser.farmSize || '';
+                    document.getElementById('mainCrops').value = this.currentUser.mainCrops || '';
+                } else if (this.currentUser.userType === 'machinery_owner') {
+                    document.getElementById('machineryTypes').value = this.currentUser.machineryTypes || '';
+                } else if (this.currentUser.userType === 'labour') {
+                    document.getElementById('skills').value = this.currentUser.skills || '';
+                    document.getElementById('experience').value = this.currentUser.experience || '';
+                }
+            }
+
+            toggleUserTypeDetails(userType) {
+                // Hide all detail sections first
+                document.getElementById('farmDetails').style.display = 'none';
+                document.getElementById('machineryDetails').style.display = 'none';
+                document.getElementById('labourDetails').style.display = 'none';
+                
+                // Show relevant section based on user type
+                switch(userType) {
+                    case 'farmer':
+                        document.getElementById('farmDetails').style.display = 'block';
+                        break;
+                    case 'machinery_owner':
+                        document.getElementById('machineryDetails').style.display = 'block';
+                        break;
+                    case 'labour':
+                        document.getElementById('labourDetails').style.display = 'block';
+                        break;
+                }
+            }
+
+            saveProfile() {
+                const form = document.getElementById('profileForm');
+                const formData = new FormData(form);
+                
+                // Validate required fields
+                const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'pincode'];
+                for (let field of requiredFields) {
+                    if (!formData.get(field)) {
+                        this.showNotification(`Please fill in the ${field} field.`, 'error');
+                        return;
+                    }
+                }
+                
+                // Update user data
+                const updatedUser = {
+                    ...this.currentUser,
+                    fullname: `${formData.get('firstName')} ${formData.get('lastName')}`.trim(),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    address: formData.get('address'),
+                    city: formData.get('city'),
+                    pincode: formData.get('pincode'),
+                    userType: formData.get('userType'),
+                    updatedAt: new Date().toISOString()
+                };
+                
+                // Add user type specific data
+                switch(updatedUser.userType) {
+                    case 'farmer':
+                        updatedUser.farmName = formData.get('farmName');
+                        updatedUser.farmSize = formData.get('farmSize');
+                        updatedUser.mainCrops = formData.get('mainCrops');
+                        break;
+                    case 'machinery_owner':
+                        updatedUser.machineryTypes = formData.get('machineryTypes');
+                        break;
+                    case 'labour':
+                        updatedUser.skills = formData.get('skills');
+                        updatedUser.experience = formData.get('experience');
+                        break;
+                }
+                
+                // Save to localStorage
+                localStorage.setItem('farmconnect_current_user', JSON.stringify(updatedUser));
+                
+                // Update dashboard manager
+                this.currentUser = updatedUser;
+                this.loadUserData();
+                
+                this.showNotification('Profile updated successfully!', 'success');
+            }
+
+            resetProfileForm() {
+                if (confirm('Are you sure you want to reset all changes?')) {
+                    this.loadProfile();
+                    this.showNotification('Form reset to saved values.', 'info');
+                }
+            }
+
+            changeProfilePhoto() {
+                this.showNotification('Profile photo change functionality would be implemented here.', 'info');
+            }
+
+            // Export Data Functionality
+            exportData() {
+                try {
+                    // Collect user data
+                    const userData = this.currentUser;
+                    const orders = JSON.parse(localStorage.getItem('farmconnect_orders')) || this.getSampleOrders();
+                    const favorites = JSON.parse(localStorage.getItem('farmconnect_favorites')) || [];
+                    
+                    // Prepare export data
+                    const exportData = {
+                        user: userData,
+                        orders: orders,
+                        favorites: favorites,
+                        exportDate: new Date().toISOString(),
+                        exportType: 'FarmConnect Data Export'
+                    };
+
+                    // Convert to JSON string
+                    const dataStr = JSON.stringify(exportData, null, 2);
+                    
+                    // Create and download file
+                    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                    const url = URL.createObjectURL(dataBlob);
+                    
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `farmconnect_data_${userData.userID}_${new Date().toISOString().split('T')[0]}.json`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Clean up URL
+                    setTimeout(() => URL.revokeObjectURL(url), 100);
+
+                    // Show success message
+                    this.showNotification('Data exported successfully!', 'success');
+                    
+                } catch (error) {
+                    console.error('Error exporting data:', error);
+                    this.showNotification('Error exporting data. Please try again.', 'error');
+                }
+            }
+
+            // New Booking Functionality
+            createNewBooking() {
+                // Show booking modal
+                this.showBookingModal();
+            }
+
+            showBookingModal() {
+                // Create modal for new booking
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.5);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10000;
+                `;
+
+                modal.innerHTML = `
+                    <div style="background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="margin: 0; color: #1B5E20;">Create New Booking</h3>
+                            <button class="close-modal" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;">&times;</button>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <p style="color: #666; margin-bottom: 20px;">Choose what you'd like to book:</p>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <div class="booking-option" style="border: 2px solid #f0f0f0; border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #4CAF50, #2E7D32); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
+                                        <i class="fas fa-tractor" style="color: white; font-size: 1.5rem;"></i>
+                                    </div>
+                                    <h4 style="margin: 0 0 5px; color: #333;">Machinery</h4>
+                                    <p style="margin: 0; color: #666; font-size: 0.9rem;">Rent farm equipment</p>
+                                </div>
+                                
+                                <div class="booking-option" style="border: 2px solid #f0f0f0; border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #2196F3, #1976D2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
+                                        <i class="fas fa-users" style="color: white; font-size: 1.5rem;"></i>
+                                    </div>
+                                    <h4 style="margin: 0 0 5px; color: #333;">Labor</h4>
+                                    <p style="margin: 0; color: #666; font-size: 0.9rem;">Hire skilled workers</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                            <button class="btn btn-outline cancel-btn" style="padding: 10px 20px;">Cancel</button>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+
+                // Add event listeners
+                modal.querySelector('.close-modal').addEventListener('click', () => {
+                    document.body.removeChild(modal);
+                });
+
+                modal.querySelector('.cancel-btn').addEventListener('click', () => {
+                    document.body.removeChild(modal);
+                });
+
+                // Add click handlers for booking options
+               
+                const machineryOption = modal.querySelector('.booking-option:nth-child(1)');
+                const laborOption = modal.querySelector('.booking-option:nth-child(2)');
+
+                machineryOption.addEventListener('click', () => {
+                    document.body.removeChild(modal);
+                    window.location.href = 'machinery.html';
+                });
+
+                laborOption.addEventListener('click', () => {
+                    document.body.removeChild(modal);
+                    window.location.href = 'labour.html';
+                });
+
+                // Add hover effects
+                const options = modal.querySelectorAll('.booking-option');
+                options.forEach(option => {
+                    option.addEventListener('mouseenter', function() {
+                        this.style.borderColor = '#4CAF50';
+                        this.style.transform = 'translateY(-2px)';
+                    });
+                    
+                    option.addEventListener('mouseleave', function() {
+                        this.style.borderColor = '#f0f0f0';
+                        this.style.transform = 'translateY(0)';
+                    });
+                });
+
+                // Close modal when clicking outside
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        document.body.removeChild(modal);
+                    }
+                });
+            }
+
+            viewOrder(orderId) {
+                this.showNotification(`Viewing order: ${orderId}`, 'info');
+                // In real implementation, you would show a modal or navigate to order details page
+            }
+
+            showNotification(message, type = 'info') {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 20px;
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: 500;
+                    z-index: 10001;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                    transform: translateX(100%);
+                    transition: transform 0.3s ease;
+                `;
+
+                // Set background color based on type
+                const colors = {
+                    success: '#4CAF50',
+                    error: '#f44336',
+                    info: '#2196F3',
+                    warning: '#FF9800'
+                };
+
+                notification.style.backgroundColor = colors[type] || colors.info;
+                notification.textContent = message;
+
+                document.body.appendChild(notification);
+
+                // Animate in
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                }, 100);
+
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+
+            formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-IN', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+            }
+        }
+
+        // Initialize dashboard when page loads
+        let dashboardManager;
+        document.addEventListener('DOMContentLoaded', function() {
+            dashboardManager = new DashboardManager();
+        });
+
+        function setProfileAvatar(user) {
+            const initialsEl = document.getElementById('profileAvatarInitials');
+            const imgEl = document.getElementById('profileAvatarImg');
+            if (user.profilePicture) {
+                imgEl.src = user.profilePicture;
+                imgEl.style.display = 'block';
+                initialsEl.style.display = 'none';
+            } else {
+                // Show initials
+                let initials = '';
+                if (user.fullname) {
+                    const names = user.fullname.split(' ');
+                    initials = names[0].charAt(0).toUpperCase() + (names[1] ? names[1].charAt(0).toUpperCase() : '');
+                } else if (user.email) {
+                    initials = user.email.charAt(0).toUpperCase();
+                }
+                initialsEl.textContent = initials;
+                initialsEl.style.display = 'block';
+                imgEl.style.display = 'none';
+            }
+        }
+
+        function handleProfilePhotoChange(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                // Save base64 image to user profile
+                const user = dashboardManager.currentUser;
+                user.profilePicture = ev.target.result;
+                localStorage.setItem('farmconnect_current_user', JSON.stringify(user));
+                setProfileAvatar(user);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // ...existing code...
+            // Set avatar initials or image on load
+            setProfileAvatar(dashboardManager.currentUser);
+
+            // Change photo button
+            document.getElementById('changePhotoBtn').addEventListener('click', function() {
+                document.getElementById('profilePhotoInput').click();
+            });
+            document.getElementById('profilePhotoInput').addEventListener('change', handleProfilePhotoChange);
+
+            // Update avatar after profile save
+            dashboardManager.saveProfile = function() {
+                // ...existing code for saving profile...
+                // After saving, update avatar
+                setProfileAvatar(this.currentUser);
+                // ...existing code...
+            };
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FarmConnect</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="auth.js"></script>
+    <!-- Google Sign-In API -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Facebook SDK -->
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+    <style>
+        /* Color Variables */
+        :root {
+            --primary-green: #2d5016;
+            --secondary-green: #4a7c20;
+            --light-green: #e8f5e8;
+            --accent-green: #3a6410;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #dddddd;
+            --dark-gray: #333333;
+            --text-gray: #666666;
+            --error-red: #e74c3c;
+            --success-green: #27ae60;
+            --warning-orange: #e89817;
+            --google-red: #db4437;
+            --facebook-blue: #4267B2;
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--light-green) 0%, var(--white) 50%, var(--light-green) 100%);
+            color: var(--dark-gray);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--accent-green) 100%);
+            color: var(--white);
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(45, 80, 22, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav-brand h2 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-brand i {
+            color: #ffd700;
+            font-size: 1.6rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .back-home {
+            color: var(--white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .back-home:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main Container */
+        .auth-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%234a7c20" opacity="0.03"><circle cx="20" cy="20" r="2"/><circle cx="80" cy="40" r="1.5"/><circle cx="40" cy="80" r="1"/><circle cx="70" cy="20" r="1.2"/><circle cx="30" cy="50" r="0.8"/></svg>');
+        }
+
+        /* Auth Card */
+        .auth-card {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(45, 80, 22, 0.15);
+            width: 100%;
+            max-width: 480px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(74, 124, 32, 0.1);
+        }
+
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green), var(--primary-green));
+        }
+
+        .auth-card h2 {
+            color: var(--primary-green);
+            margin-bottom: 12px;
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .auth-card > p {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+
+        /* Messages */
+        .success-message {
+            background: linear-gradient(135deg, #d4edda, #e8f5e8);
+            color: #155724;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: none;
+            border-left: 4px solid var(--success-green);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
+        }
+
+        .success-message i {
+            color: var(--success-green);
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .user-id-login {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: none;
+            border: 2px dashed var(--medium-gray);
+            position: relative;
+        }
+
+        .user-id-login::before {
+            content: '🔐';
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: var(--white);
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            border: 2px dashed var(--medium-gray);
+        }
+
+        .user-id-login h4 {
+            color: var(--primary-green);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+        }
+
+        .user-id-login h4 i {
+            color: var(--secondary-green);
+        }
+
+        /* Quick Login Section */
+        .quick-login-section {
+            margin: 25px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 2px dashed #dddddd;
+        }
+
+        .quick-demo-btn {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .quick-demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .farmer-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .machinery-btn {
+            background: linear-gradient(135deg, #fd7e14, #e9a347);
+            color: white;
+        }
+
+        .labour-btn {
+            background: linear-gradient(135deg, #6f42c1, #8b5cf6);
+            color: white;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--primary-green);
+            font-size: 1rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid var(--medium-gray);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--white);
+            color: var(--dark-gray);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--secondary-green);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(74, 124, 32, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input::placeholder {
+            color: #aaa;
+        }
+
+        /* Error Messages */
+        .error-message {
+            color: var(--error-red);
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: none;
+            font-weight: 500;
+            padding-left: 5px;
+        }
+
+        /* Form Options */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox input {
+            width: auto;
+            transform: scale(1.2);
+            accent-color: var(--secondary-green);
+        }
+
+        .forgot-link {
+            color: var(--secondary-green);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-link:hover {
+            color: var(--primary-green);
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary-green), var(--primary-green));
+            color: var(--white);
+            box-shadow: 0 6px 20px rgba(74, 124, 32, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            box-shadow: 0 8px 25px rgba(74, 124, 32, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: var(--white);
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.5);
+        }
+
+        .btn-google {
+            background: linear-gradient(135deg, var(--google-red), #c23321);
+            color: var(--white);
+            box-shadow: 0 6px 20px rgba(219, 68, 55, 0.4);
+        }
+
+        .btn-facebook {
+            background: linear-gradient(135deg, var(--facebook-blue), #365899);
+            color: var(--white);
+            box-shadow: 0 6px 20px rgba(66, 103, 178, 0.4);
+        }
+
+        .btn-google:hover, .btn-facebook:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Login Options */
+        .login-options {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .toggle-login-type {
+            color: var(--secondary-green);
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: rgba(74, 124, 32, 0.1);
+        }
+
+        .toggle-login-type:hover {
+            color: var(--primary-green);
+            background: rgba(74, 124, 32, 0.2);
+            text-decoration: none;
+        }
+
+        /* Divider */
+        .auth-divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--medium-gray), transparent);
+        }
+
+        .auth-divider span {
+            background: var(--white);
+            padding: 0 20px;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        /* Social Auth */
+        .social-auth {
+            display: flex;
+            flex-direction: row;
+            gap: 18px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .social-auth > div {
+            flex: 1 1 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .social-auth {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .social-auth > div {
+                width: 100%;
+            }
+        }
+
+        /* Auth Switch */
+        .auth-switch {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--text-gray);
+        }
+
+        .auth-switch a {
+            color: var(--secondary-green);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .auth-switch a:hover {
+            color: var(--primary-green);
+            text-decoration: underline;
+        }
+
+        /* Demo Info */
+        .demo-info {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f0f7f0, #e8f5e8);
+            border-radius: 15px;
+            border-left: 4px solid var(--warning-orange);
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+            box-shadow: 0 4px 12px rgba(232, 153, 23, 0.1);
+        }
+
+        .demo-info strong {
+            color: var(--primary-green);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .demo-info i {
+            color: var(--warning-orange);
+        }
+
+        /* Google Sign In Button Customization */
+        .g_id_signin {
+            width: 100% !important;
+            border-radius: 12px !important;
+        }
+
+        /* Loading States */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .auth-card {
+                padding: 30px 25px;
+                margin: 20px;
+            }
+            
+            .social-auth {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-options {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 25px 20px;
+            }
+            
+            .auth-card h2 {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                padding: 14px 24px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+
+    <!-- Add this before your other script tags -->
+<script src="database.js"></script>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h2><i class="fas fa-tractor"></i> FarmConnect</h2>
+            </div>
+            <a href="index.html" class="back-home"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        </nav>
+    </header>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2>Welcome Back</h2>
+            <p>Sign in to your FarmConnect account</p>
+            
+            <!-- Success Message -->
+            <div id="successMessage" class="success-message">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText">Login successful! Redirecting...</span>
+            </div>
+            
+            <!-- User ID Login Option -->
+            <div id="userIDLogin" class="user-id-login" style="display: none;">
+                <h4><i class="fas fa-id-card"></i> Login with User ID</h4>
+                <div class="form-group">
+                    <label for="userID">User ID</label>
+                    <input type="text" id="userID" name="userID" placeholder="Enter your User ID (e.g., FARM123456789)">
+                </div>
+                <div class="form-group">
+                    <label for="passwordUserID">Password</label>
+                    <input type="password" id="passwordUserID" name="passwordUserID" required>
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="loginWithUserID()">
+                    <i class="fas fa-sign-in-alt"></i> Login with User ID
+                </button>
+                <div class="login-options">
+                    <span class="toggle-login-type" onclick="toggleLoginType()">← Login with Email instead</span>
+                </div>
+            </div>
+            
+            <!-- Email Login (Default) -->
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email address">
+                    <div id="emailError" class="error-message">Please enter a valid email address</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    <div id="passwordError" class="error-message">Please enter your password</div>
+                </div>
+                
+                <div class="form-options">
+                    <label class="checkbox">
+                        <input type="checkbox" id="remember" name="remember">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="forgot-password.html" class="forgot-link">Forgot Password?</a>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+                
+                <div class="login-options">
+                    <span class="toggle-login-type" onclick="toggleLoginType()">Login with User ID instead →</span>
+                </div>
+            </form>
+
+          
+            
+            <div class="auth-divider">
+                <span>Or continue with</span>
+            </div>
+            
+            <!-- Social Login Section -->
+            <div class="social-auth">
+                <div>
+                    <!-- Google Sign In -->
+                    <div id="g_id_onload"
+                        data-client_id="40359264321-cn3i3cot1oa8lvkaueiv6qltvkh5gesj.apps.googleusercontent.com"
+                        data-context="signin"
+                        data-ux_mode="popup"
+                        data-callback="handleGoogleSignIn"
+                        data-auto_prompt="false">
+                    </div>
+                    <div class="g_id_signin"
+                        data-type="standard"
+                        data-shape="rectangular"
+                        data-theme="filled_blue"
+                        data-text="signin_with"
+                        data-size="large"
+                        data-logo_alignment="left">
+                    </div>
+                </div>
+                <div>
+                    <!-- Facebook Login -->
+                    <div class="fb-login-button" 
+                        data-width="" 
+                        data-size="large"
+                        data-button-type="continue_with" 
+                        data-layout="default" 
+                        data-auto-logout-link="false" 
+                        data-use-continue-as="false"
+                        onlogin="checkFacebookLoginState();">
+                    </div>
+                </div>
+            </div>
+            
+            <p class="auth-switch">
+                Don't have an account? <a href="register.html">Sign up here</a>
+            </p>
+            
+            <!-- Demo Users Info -->
+            <div class="demo-info">
+                <strong><i class="fas fa-info-circle"></i> Demo Users (if no users registered):</strong><br>
+                • Email: farmer@demo.com | Password: demo123 (Farmer)<br>
+                • Email: machinery@demo.com | Password: demo123 (Machinery Owner)<br>
+                • Email: labour@demo.com | Password: demo123 (Labour)<br><br>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Key for storing users in localStorage
+        const USERS_KEY = 'farmconnect_users';
+        const CURRENT_USER_KEY = 'farmconnect_current_user';
+        
+        // Initialize Facebook SDK
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId: '810149828264400', // Replace with your Facebook App ID
+                cookie: true,
+                xfbml: true,
+                version: 'v18.0'
+            });
+        };
+
+        // Check if users exist, if not create demo users
+        function initializeDemoUsers() {
+            let users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+            
+            if (users.length === 0) {
+                console.log('Creating demo users...');
+                // Create demo users
+                const demoUsers = [
+                    {
+                        userID: 'FARM2024001',
+                        fullname: 'Demo Farmer',
+                        email: 'farmer@demo.com',
+                        phone: '9876543210',
+                        password: 'demo123',
+                        userType: 'farmer',
+                        address: 'Demo Farm, Kalyani',
+                        farmSize: '5',
+                        crops: 'Rice, Wheat',
+                        registrationDate: new Date().toISOString(),
+                        status: 'active',
+                        loginMethod: 'email'
+                    },
+                    {
+                        userID: 'MACH2024001',
+                        fullname: 'Demo Machinery Owner',
+                        email: 'machinery@demo.com',
+                        phone: '9876543211',
+                        password: 'demo123',
+                        userType: 'machinery_owner',
+                        address: 'Demo Machinery Shop, Nadia',
+                        machineryList: 'Tractor, Harvester, Plough',
+                        experience: '5',
+                        registrationDate: new Date().toISOString(),
+                        status: 'active',
+                        loginMethod: 'email'
+                    },
+                    {
+                        userID: 'LABR2024001',
+                        fullname: 'Demo Labour',
+                        email: 'labour@demo.com',
+                        phone: '9876543212',
+                        password: 'demo123',
+                        userType: 'labour',
+                        address: 'Demo Labour Colony, Kalyani',
+                        skills: 'Harvesting, Planting, Irrigation',
+                        experience: '3',
+                        dailyRate: '500',
+                        registrationDate: new Date().toISOString(),
+                        status: 'active',
+                        loginMethod: 'email'
+                    }
+                ];
+                
+                localStorage.setItem(USERS_KEY, JSON.stringify(demoUsers));
+                console.log('Demo users created successfully');
+            } else {
+                console.log('Demo users already exist');
+            }
+        }
+        
+        // Validate login with email
+        function validateLogin(email, password) {
+            const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+            console.log('Validating login for email:', email);
+            console.log('Total users in system:', users.length);
+            
+            const user = users.find(u => u.email === email && u.password === password);
+            console.log('Login validation result:', user ? 'SUCCESS' : 'FAILED');
+            return user;
+        }
+        
+        // Validate login with User ID
+        function validateLoginWithUserID(userID, password) {
+            const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+            const user = users.find(u => u.userID === userID && u.password === password);
+            return user;
+        }
+        
+        // Store current user session
+        function setCurrentUser(user) {
+            // Store basic user info for session
+            const sessionUser = {
+                userID: user.userID,
+                fullname: user.fullname,
+                email: user.email,
+                userType: user.userType,
+                loginTime: new Date().toISOString(),
+                loginMethod: user.loginMethod || 'email'
+            };
+            
+            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(sessionUser));
+            console.log('User session stored in localStorage');
+            
+            // If "Remember me" is checked, store for longer period
+            if (document.getElementById('remember')?.checked) {
+                localStorage.setItem('farmconnect_remembered_user', JSON.stringify(sessionUser));
+            }
+        }
+        
+        // Handle successful login
+        function handleLoginSuccess(user, loginMethod = 'email') {
+            console.log('Login successful for user:', user.fullname, 'Method:', loginMethod);
+            
+            // Use the new user session system if available
+            if (typeof userSession !== 'undefined') {
+                console.log('Using userSession system');
+                userSession.setCurrentUser(user);
+            } else {
+                console.log('userSession not available, using localStorage fallback');
+                setCurrentUser(user);
+            }
+            
+            // Show success message
+            const successMessage = document.getElementById('successMessage');
+            const successText = document.getElementById('successText');
+            
+            if (successMessage && successText) {
+                successMessage.style.display = 'block';
+                successText.textContent = `Welcome back, ${user.fullname}! Redirecting...`;
+            }
+            
+            // Hide login forms
+            const loginForm = document.getElementById('loginForm');
+            const userIDLogin = document.getElementById('userIDLogin');
+            
+            if (loginForm) loginForm.style.display = 'none';
+            if (userIDLogin) userIDLogin.style.display = 'none';
+            
+            // Redirect after 2 seconds
+            setTimeout(() => {
+                console.log('Redirecting user type:', user.userType);
+                let redirectUrl = 'index.html';
+                
+                switch(user.userType) {
+                    case 'farmer':
+                        redirectUrl = 'index.html';
+                        break;
+                    case 'machinery_owner':
+                        redirectUrl = 'machinery.html?owner=true';
+                        break;
+                    case 'labour':
+                        redirectUrl = 'labour.html?provider=true';
+                        break;
+                    default:
+                        redirectUrl = 'index.html';
+                }
+                
+                console.log('Redirecting to:', redirectUrl);
+                window.location.href = redirectUrl;
+            }, 2000);
+        }
+        
+        // ====== GOOGLE SIGN IN ======
+        function handleGoogleSignIn(response) {
+            console.log('Google Sign-In response:', response);
+            
+            // Decode the JWT token to get user info
+            const payload = JSON.parse(atob(response.credential.split('.')[1]));
+            console.log('Google user payload:', payload);
+            
+            // Show loading message
+            showMessage('Signing in with Google...', 'info');
+            
+            // Find or create user based on Google email
+            const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+            let user = users.find(u => u.email === payload.email);
+            
+            if (!user) {
+                // Create new user from Google info
+                user = {
+                    userID: 'GOOG' + Date.now(),
+                    fullname: payload.name,
+                    email: payload.email,
+                    phone: '',
+                    password: 'google_oauth', // Special password for OAuth users
+                    userType: 'farmer', // Default type
+                    address: '',
+                    registrationDate: new Date().toISOString(),
+                    status: 'active',
+                    loginMethod: 'google',
+                    picture: payload.picture
+                };
+                
+                users.push(user);
+                localStorage.setItem(USERS_KEY, JSON.stringify(users));
+                console.log('New user created from Google:', user);
+            }
+            
+            // Update login method
+            user.loginMethod = 'google';
+            
+            // Handle successful login
+            handleLoginSuccess(user, 'google');
+        }
+
+        // ====== FACEBOOK LOGIN ======
+        function checkFacebookLoginState() {
+            FB.getLoginStatus(function(response) {
+                if (response.status === 'connected') {
+                    // User is logged in with Facebook
+                    handleFacebookSignIn(response);
+                } else {
+                    console.log('User cancelled Facebook login or not authorized.');
+                }
+            });
+        }
+
+        function handleFacebookSignIn(response) {
+            console.log('Facebook Login response:', response);
+            
+            // Get user info from Facebook
+            FB.api('/me', { fields: 'name,email' }, function(userInfo) {
+                console.log('Facebook user info:', userInfo);
+                
+                // Show loading message
+                showMessage('Signing in with Facebook...', 'info');
+                
+                // Find or create user based on Facebook email
+                const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+                let user = users.find(u => u.email === userInfo.email);
+                
+                if (!user) {
+                    // Create new user from Facebook info
+                    user = {
+                        userID: 'FB' + Date.now(),
+                        fullname: userInfo.name,
+                        email: userInfo.email,
+                        phone: '',
+                        password: 'facebook_oauth', // Special password for OAuth users
+                        userType: 'farmer', // Default type
+                        address: '',
+                        registrationDate: new Date().toISOString(),
+                        status: 'active',
+                        loginMethod: 'facebook'
+                    };
+                    
+                    users.push(user);
+                    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+                    console.log('New user created from Facebook:', user);
+                }
+                
+                // Update login method
+                user.loginMethod = 'facebook';
+                
+                // Handle successful login
+                handleLoginSuccess(user, 'facebook');
+            });
+        }
+
+        // NEW LOGIN OPTIONS FUNCTIONS
+        
+        // Simple quick login function
+        function quickLogin(userType) {
+            console.log('Quick login for:', userType);
+            
+            // Define demo user credentials
+            const demoUsers = {
+                farmer: { email: 'farmer@demo.com', password: 'demo123' },
+                machinery: { email: 'machinery@demo.com', password: 'demo123' },
+                labour: { email: 'labour@demo.com', password: 'demo123' }
+            };
+            
+            const demoUser = demoUsers[userType];
+            
+            if (demoUser) {
+                // Fill the email and password fields
+                document.getElementById('email').value = demoUser.email;
+                document.getElementById('password').value = demoUser.password;
+                
+                // Check remember me
+                document.getElementById('remember').checked = true;
+                
+                // Show loading message
+                showMessage(`Logging in as ${userType}...`, 'info');
+                
+                // Auto login after 1 second
+                setTimeout(() => {
+                    document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+                }, 1000);
+            }
+        }
+
+        // Simple message display function
+        function showMessage(message, type = 'info') {
+            // Remove any existing messages
+            const existingMessage = document.querySelector('.temp-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            // Create new message
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `temp-message ${type}-message`;
+            messageDiv.style.cssText = `
+                padding: 12px 16px;
+                margin: 15px 0;
+                border-radius: 8px;
+                text-align: center;
+                font-weight: 500;
+                background: ${type === 'info' ? '#d1ecf1' : '#d4edda'};
+                color: ${type === 'info' ? '#0c5460' : '#155724'};
+                border-left: 4px solid ${type === 'info' ? '#17a2b8' : '#28a745'};
+            `;
+            messageDiv.textContent = message;
+            
+            // Insert after the success message
+            const successMessage = document.getElementById('successMessage');
+            successMessage.parentNode.insertBefore(messageDiv, successMessage.nextSibling);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.remove();
+                }
+            }, 3000);
+        }
+
+        // Enhanced User ID login function
+        function loginWithUserID() {
+            const userID = document.getElementById('userID').value.trim();
+            const password = document.getElementById('passwordUserID').value;
+            if (!userID) {
+                alert('Please enter your User ID');
+                return;
+            }
+            if (!password) {
+                alert('Please enter your password');
+                return;
+            }
+            const user = validateLoginWithUserID(userID, password);
+            if (user) {
+                handleLoginSuccess(user);
+            } else {
+                alert('Invalid User ID or password');
+            }
+        }
+
+        // Enhanced toggle function
+        function toggleLoginType() {
+            const emailForm = document.getElementById('loginForm');
+            const userIDForm = document.getElementById('userIDLogin');
+            if (emailForm.style.display !== 'none') {
+                // Switch to User ID login
+                emailForm.style.display = 'none';
+                userIDForm.style.display = 'block';
+                showMessage('Now using User ID login', 'info');
+            } else {
+                // Switch to email login
+                userIDForm.style.display = 'none';
+                emailForm.style.display = 'block';
+                showMessage('Now using email login', 'info');
+            }
+        }
+        
+        // Check if user is already logged in
+        function checkExistingSession() {
+            const currentUser = localStorage.getItem(CURRENT_USER_KEY);
+            if (currentUser) {
+                const user = JSON.parse(currentUser);
+                document.getElementById('email').value = user.email || '';
+            }
+
+            // Only pre-fill email, do NOT auto-login from remembered user
+            const rememberedUser = localStorage.getItem('farmconnect_remembered_user');
+            if (rememberedUser) {
+                const user = JSON.parse(rememberedUser);
+                document.getElementById('email').value = user.email || '';
+                document.getElementById('remember').checked = true;
+                // Do NOT set session or show profile
+            }
+        }
+
+        // If a user session already exists, redirect them away from login/register pages
+        function redirectIfLoggedIn() {
+            const currentUser = localStorage.getItem(CURRENT_USER_KEY);
+            if (!currentUser) return false;
+
+            try {
+                const user = JSON.parse(currentUser);
+                let redirectUrl = 'index.html';
+                switch (user.userType) {
+                    case 'farmer': redirectUrl = 'index.html'; break;
+                    case 'machinery_owner': redirectUrl = 'machinery.html?owner=true'; break;
+                    case 'labour': redirectUrl = 'labour.html?provider=true'; break;
+                    default: redirectUrl = 'index.html';
+                }
+                // Redirect immediately
+                window.location.href = redirectUrl;
+                return true;
+            } catch (e) {
+                console.error('Failed to parse current user for redirect', e);
+                return false;
+            }
+        }
+        
+        // Show error message
+        function showError(elementId, message) {
+            let errorElement = document.getElementById(elementId);
+            if (!errorElement) {
+                errorElement = document.createElement('div');
+                errorElement.id = elementId;
+                errorElement.className = 'error-message';
+                document.querySelector('.auth-form').appendChild(errorElement);
+            }
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Login page loaded - initializing...');
+            initializeDemoUsers();
+            checkExistingSession();
+
+            // If user already has a session, redirect them away from login
+            if (redirectIfLoggedIn()) return;
+            
+            // Check if auth.js loaded properly
+            if (typeof userSession === 'undefined') {
+                console.warn('auth.js not loaded - userSession not available');
+            } else {
+                console.log('auth.js loaded successfully - userSession available');
+            }
+            
+            // Ensure correct login form is shown by default
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('userIDLogin').style.display = 'none';
+            
+            // Email login form submission
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('Email login form submitted');
+                
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                
+                // Reset errors
+                document.querySelectorAll('.error-message').forEach(error => {
+                    error.style.display = 'none';
+                });
+                
+                // Validate inputs
+                if (!email) {
+                    showError('emailError', 'Please enter your email address');
+                    return;
+                }
+                
+                if (!password) {
+                    showError('passwordError', 'Please enter your password');
+                    return;
+                }
+                
+                // Validate credentials
+                const user = validateLogin(email, password);
+                
+                if (user) {
+                    handleLoginSuccess(user);
+                } else {
+                    showError('passwordError', 'Invalid email or password');
+                }
+            });
+            
+            // Enter key support
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+                }
+            });
+            
+            document.getElementById('passwordUserID').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    loginWithUserID();
+                }
+            });
+            
+            console.log('Login page initialization complete');
+        });
+    </script>
+</body>
+</html>

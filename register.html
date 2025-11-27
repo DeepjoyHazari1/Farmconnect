@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - FarmConnect</title>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Sign-In API -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background-color: #2d5016;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav-brand h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .back-home {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 15px;
+            border-radius: 4px;
+            background-color: rgba(255,255,255,0.1);
+            transition: background-color 0.3s;
+        }
+        
+        .back-home:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+            padding: 20px;
+        }
+        
+        .auth-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+        }
+        
+        .auth-card h2 {
+            color: #2d5016;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .auth-card > p {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #666;
+        }
+
+        /* Social Login Section - UPDATED */
+        .social-login-section {
+            margin-bottom: 25px;
+        }
+        .social-buttons {
+            display: flex;
+            flex-direction: row;
+            gap: 18px;
+            justify-content: center;
+            align-items: center;
+        }
+        .social-buttons > div, .social-buttons > button {
+            flex: 1 1 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        @media (max-width: 768px) {
+            .social-buttons {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .social-buttons > div, .social-buttons > button {
+                width: 100%;
+            }
+        }
+
+        /* Google Button */
+        .google-btn-container {
+            width: 100%;
+        }
+
+        .g_id_signin {
+            width: 100% !important;
+            border-radius: 4px !important;
+            margin-bottom: 0 !important;
+        }
+
+        /* Facebook Button Container - FIXED */
+        #facebookButtonContainer {
+            width: 100%;
+            min-height: 44px;
+            display: block !important;
+            visibility: visible !important;
+        }
+
+        .fb-login-button {
+            width: 100% !important;
+            min-height: 44px !important;
+        }
+
+        .fb-login-button span {
+            width: 100% !important;
+            min-height: 44px !important;
+            border-radius: 4px !important;
+        }
+
+        /* Manual Facebook Button */
+        .social-btn.facebook {
+            background: #4267B2;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 44px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .social-btn.facebook:hover {
+            background: #365899;
+        }
+
+        /* Facebook Logout Button */
+        .social-btn.facebook-logout {
+            background: #dc3545;
+            color: white;
+            display: none;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 44px;
+            width: 100%;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #444;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: #4a7c20;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(74, 124, 32, 0.2);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .password-strength {
+            margin-top: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .strength-weak { color: #e74c3c; }
+        .strength-medium { color: #e89817; }
+        .strength-strong { color: #27ae60; }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .user-id-display {
+            background: #e8f5e8;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+        }
+        
+        .checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+        
+        .checkbox input {
+            width: auto;
+            margin-top: 3px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #4a7c20;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background-color: #3a6410;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .auth-switch a {
+            color: #4a7c20;
+            text-decoration: none;
+        }
+        
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        /* Facebook User Info */
+        .facebook-user-info {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+            text-align: center;
+        }
+
+        .facebook-user-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .facebook-user-info p {
+            margin: 5px 0;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 600px) {
+            .auth-card {
+                padding: 20px;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Debug Info */
+        .debug-info {
+            display: none;
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+            border-left: 4px solid #17a2b8;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h2><i class="fas fa-tractor"></i> FarmConnect</h2>
+            </div>
+            <a href="index.html" class="back-home"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        </nav>
+    </header>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2>Join FarmConnect</h2>
+            <p>Create your account to get started</p>
+            
+            <!-- Success Message -->
+            <div id="successMessage" class="success-message">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText">Registration successful! Redirecting to login...</span>
+            </div>
+            
+            <!-- User ID Display -->
+            <div id="userIDDisplay" class="user-id-display">
+                <strong>Your User ID: <span id="generatedUserID"></span></strong>
+                <p>Please save this ID for future login</p>
+            </div>
+
+            <!-- Facebook User Info (shown after login) -->
+            <div id="facebookUserInfo" class="facebook-user-info">
+                <img id="fbUserPicture" src="" alt="Profile Picture">
+                <p id="fbUserName"></p>
+                <p id="fbUserEmail"></p>
+            </div>
+
+         
+
+            <!-- Social Login Section - UPDATED -->
+            <div class="social-login-section">
+                <div class="social-buttons">
+                    <div class="google-btn-container">
+                        <div id="g_id_onload"
+                            data-client_id="40359264321-cn3i3cot1oa8lvkaueiv6qltvkh5gesj.apps.googleusercontent.com"
+                            data-context="signup"
+                            data-ux_mode="popup"
+                            data-callback="handleGoogleSignUp"
+                            data-auto_prompt="false">
+                        </div>
+                        <div class="g_id_signin"
+                            data-type="standard"
+                            data-shape="rectangular"
+                            data-theme="filled_blue"
+                            data-text="signup_with"
+                            data-size="large"
+                            data-logo_alignment="left">
+                        </div>
+                    </div>
+                    <div id="facebookButtonContainer">
+                        <div class="fb-login-button" 
+                             data-width="" 
+                             data-size="large"
+                             data-button-type="continue_with" 
+                             data-layout="default" 
+                             data-auto-logout-link="false" 
+                             data-use-continue-as="true"
+                             data-scope="public_profile,email"
+                             onlogin="checkFacebookLoginState();">
+                        </div>
+                    </div>
+                    <button id="manualFacebookBtn" class="social-btn facebook" onclick="manualFacebookLogin()" style="display: none;">
+                        <i class="fab fa-facebook-f"></i>
+                        Continue with Facebook
+                    </button>
+                    <button id="facebookLogoutBtn" class="social-btn facebook-logout" onclick="facebookLogout()" style="display: none;">
+                        <i class="fab fa-facebook-f"></i>
+                        Sign Out from Facebook
+                    </button>
+                </div>
+            </div>
+
+            <div class="divider">
+                <span>Or register with email</span>
+            </div>
+            
+            <form id="registrationForm" class="auth-form">
+                <div class="form-group">
+                    <label for="fullname">Full Name *</label>
+                    <input type="text" id="fullname" name="fullname" required>
+                    <div id="nameError" class="error-message">Please enter your full name</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required>
+                    <div id="emailError" class="error-message">Please enter a valid email address</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" required>
+                    <div id="phoneError" class="error-message">Please enter a valid 10-digit phone number</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Address *</label>
+                    <textarea id="address" name="address" rows="3" required placeholder="Enter your complete address"></textarea>
+                    <div id="addressError" class="error-message">Please enter your address</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="userType">I am a *</label>
+                    <select id="userType" name="userType" required>
+                        <option value="">Select account type</option>
+                        <option value="farmer">Farmer (Looking for services)</option>
+                        <option value="machinery_owner">Machinery Owner</option>
+                        <option value="labour">Skilled Labour</option>
+                    </select>
+                    <div id="userTypeError" class="error-message">Please select your account type</div>
+                </div>
+                
+                <!-- Additional fields based on user type -->
+                <div id="additionalFields" style="display: none;">
+                    <!-- Fields will be dynamically added here -->
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" name="password" required minlength="6">
+                    <div id="passwordError" class="error-message">Password must be at least 6 characters</div>
+                    <div id="passwordStrength" class="password-strength"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password *</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <div id="confirmPasswordError" class="error-message">Passwords do not match</div>
+                </div>
+                
+                <div class="form-options">
+                    <label class="checkbox">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> *</span>
+                    </label>
+                    <div id="termsError" class="error-message">You must agree to the terms and conditions</div>
+                </div>
+                
+                <button type="submit" class="btn" id="registerBtn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+            
+            <p class="auth-switch">
+                Already have an account? <a href="login.html">Sign in here</a>
+            </p>
+
+            <!-- Setup Instructions -->
+            <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px; font-size: 0.8rem; color: #666;">
+                <strong>Password Login Setup Requirement:</strong><br>
+               • Minimum 6 characters Strong passwords include letters, numbers, and symbols<br>
+                •Confirm your password
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variable to track Facebook login state
+        let isFacebookLoggedIn = false;
+        let facebookUserData = null;
+
+        // ====== FACEBOOK SDK INITIALIZATION ======
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId: '810149828264400',
+                cookie: true,
+                xfbml: true,
+                version: 'v18.0'
+            });
+
+            console.log('✅ Facebook SDK initialized');
+            
+            // Check login status on page load
+            FB.getLoginStatus(function(response) {
+                if (response.status === 'connected') {
+                    handleFacebookConnected(response);
+                }
+            });
+            
+            // Ensure Facebook button stays visible
+            setTimeout(ensureFacebookButtonVisible, 1000);
+            updateDebugInfo();
+        };
+
+        // Load Facebook SDK
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        // Ensure Facebook button visibility
+        function ensureFacebookButtonVisible() {
+            const fbContainer = document.getElementById('facebookButtonContainer');
+            const manualBtn = document.getElementById('manualFacebookBtn');
+            const fbButton = document.querySelector('.fb-login-button');
+            
+            if (fbButton && fbButton.offsetParent !== null && fbButton.offsetHeight > 0) {
+                // Facebook button is visible
+                if (manualBtn) manualBtn.style.display = 'none';
+                if (fbContainer) {
+                    fbContainer.style.display = 'block';
+                    fbContainer.style.visibility = 'visible';
+                }
+                console.log('✅ Facebook button is visible');
+            } else {
+                // Facebook button not visible, show manual button
+                if (manualBtn) manualBtn.style.display = 'flex';
+                if (fbContainer) fbContainer.style.display = 'none';
+                console.log('🔄 Using manual Facebook button');
+            }
+            updateDebugInfo();
+        }
+
+        // Manual Facebook login fallback
+        function manualFacebookLogin() {
+            if (typeof FB !== 'undefined') {
+                FB.login(function(response) {
+                    if (response.authResponse) {
+                        console.log('Manual Facebook login successful');
+                        checkFacebookLoginState();
+                    } else {
+                        console.log('Manual Facebook login cancelled');
+                    }
+                }, {scope: 'public_profile,email'});
+            } else {
+                alert('Facebook SDK not loaded. Please refresh the page.');
+            }
+        }
+
+        // Check Facebook login state
+        function checkFacebookLoginState() {
+            FB.getLoginStatus(function(response) {
+                if (response.status === 'connected') {
+                    handleFacebookSignUp(response);
+                } else {
+                    console.log('User cancelled Facebook login or not authorized.');
+                showMessage('Facebook login was cancelled', 'error');
+                }
+            });
+        }
+
+        // Handle Facebook connection
+        function handleFacebookConnected(response) {
+            // Get user info
+            FB.api('/me', { fields: 'name,email,picture' }, function(userInfo) {
+                facebookUserData = userInfo;
+                console.log('Facebook user connected:', userInfo);
+                
+                // Show user info
+                showFacebookUserInfo(userInfo);
+                
+                // Show logout button
+                document.getElementById('facebookLogoutBtn').style.display = 'flex';
+            });
+        }
+
+        function showFacebookUserInfo(userInfo) {
+            const userInfoDiv = document.getElementById('facebookUserInfo');
+            const userName = document.getElementById('fbUserName');
+            const userEmail = document.getElementById('fbUserEmail');
+            const userPicture = document.getElementById('fbUserPicture');
+            
+            userName.textContent = `Welcome, ${userInfo.name}!`;
+            userEmail.textContent = userInfo.email || 'Email not provided';
+            
+            if (userInfo.picture && userInfo.picture.data) {
+                userPicture.src = userInfo.picture.data.url;
+            }
+            
+            userInfoDiv.style.display = 'block';
+        }
+
+        // ====== FACEBOOK SIGN UP ======
+        function handleFacebookSignUp(response) {
+            console.log('Facebook Sign-Up response:', response);
+            
+            // Get user info from Facebook
+            FB.api('/me', { fields: 'name,email,picture' }, function(userInfo) {
+                console.log('Facebook user info:', userInfo);
+                
+                // Show loading message
+                showMessage('Creating account with Facebook...', 'info');
+                
+                // Check if user already exists
+                const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+                let user = users.find(u => u.email === userInfo.email);
+                
+                if (user) {
+                    showMessage('Account already exists with this email. Please login instead.', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 3000);
+                    return;
+                }
+                
+                // Create new user from Facebook info
+                user = {
+                    userID: generateUserID('farmer'),
+                    fullname: userInfo.name,
+                    email: userInfo.email,
+                    phone: '',
+                    address: '',
+                    userType: 'farmer',
+                    password: 'facebook_oauth',
+                    registrationDate: new Date().toISOString(),
+                    status: 'active',
+                    loginMethod: 'facebook',
+                    picture: userInfo.picture?.data?.url || ''
+                };
+                
+                users.push(user);
+                localStorage.setItem(USERS_KEY, JSON.stringify(users));
+                console.log('New user created from Facebook:', user);
+                
+                // Show success and redirect
+                handleRegistrationSuccess(user);
+            });
+        }
+
+        // ====== FACEBOOK LOGOUT ======
+        function facebookLogout() {
+            FB.logout(function(response) {
+                console.log('Facebook logout successful:', response);
+                
+                // Reset Facebook state
+                isFacebookLoggedIn = false;
+                facebookUserData = null;
+                
+                // Hide user info and logout button
+                document.getElementById('facebookUserInfo').style.display = 'none';
+                document.getElementById('facebookLogoutBtn').style.display = 'none';
+                
+                showMessage('Successfully signed out from Facebook', 'info');
+            });
+        }
+
+        // Debug function
+        function updateDebugInfo() {
+            const debugDiv = document.getElementById('debugInfo');
+            const fbStatus = document.getElementById('fbStatus');
+            
+            if (debugDiv && fbStatus) {
+                debugDiv.style.display = 'block';
+                
+                const fbLoaded = typeof FB !== 'undefined';
+                const fbButton = document.querySelector('.fb-login-button');
+                const fbVisible = fbButton && fbButton.offsetHeight > 0;
+                const manualBtn = document.getElementById('manualFacebookBtn');
+                
+                fbStatus.innerHTML = `
+                    SDK Loaded: ${fbLoaded ? '✅' : '❌'}<br>
+                    Button Element: ${fbButton ? '✅' : '❌'}<br>
+                    Button Visible: ${fbVisible ? '✅' : '❌'}<br>
+                    Manual Button: ${manualBtn && manualBtn.style.display !== 'none' ? '✅ Visible' : '❌ Hidden'}
+                `;
+            }
+        }
+
+        // User data storage in localStorage
+        const USERS_KEY = 'farmconnect_users';
+        const CURRENT_USER_KEY = 'farmconnect_current_user';
+
+        // If a user session exists, redirect away from registration page
+        function redirectIfLoggedIn() {
+            const current = localStorage.getItem(CURRENT_USER_KEY);
+            if (!current) return false;
+            try {
+                const user = JSON.parse(current);
+                let redirectUrl = 'index.html';
+                switch (user.userType) {
+                    case 'farmer': redirectUrl = 'index.html'; break;
+                    case 'machinery_owner': redirectUrl = 'machinery.html?owner=true'; break;
+                    case 'labour': redirectUrl = 'labour.html?provider=true'; break;
+                    default: redirectUrl = 'index.html';
+                }
+                window.location.href = redirectUrl;
+                return true;
+            } catch (e) {
+                console.error('Error parsing current user for redirect', e);
+                return false;
+            }
+        }
+        
+        // Initialize users array if not exists
+        function initializeUsers() {
+            if (!localStorage.getItem(USERS_KEY)) {
+                localStorage.setItem(USERS_KEY, JSON.stringify([]));
+            }
+        }
+        
+        // Generate unique user ID
+        function generateUserID(userType) {
+            const prefix = userType === 'farmer' ? 'FARM' : 
+                          userType === 'machinery_owner' ? 'MACH' : 'LABR';
+            const timestamp = new Date().getTime().toString().slice(-6);
+            const random = Math.floor(100 + Math.random() * 900);
+            return `${prefix}${timestamp}${random}`;
+        }
+        
+        // Check if email already exists
+        function isEmailExists(email) {
+            const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+            return users.some(user => user.email === email);
+        }
+        
+        // Check if phone already exists
+        function isPhoneExists(phone) {
+            const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+            return users.some(user => user.phone === phone);
+        }
+        
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            const strengthText = document.getElementById('passwordStrength');
+            
+            if (password.length >= 6) strength++;
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+            if (password.match(/\d/)) strength++;
+            if (password.match(/[^a-zA-Z\d]/)) strength++;
+            
+            if (password.length === 0) {
+                strengthText.textContent = '';
+                strengthText.className = 'password-strength';
+            } else if (strength <= 1) {
+                strengthText.textContent = 'Weak password';
+                strengthText.className = 'password-strength strength-weak';
+            } else if (strength <= 2) {
+                strengthText.textContent = 'Medium password';
+                strengthText.className = 'password-strength strength-medium';
+            } else {
+                strengthText.textContent = 'Strong password';
+                strengthText.className = 'password-strength strength-strong';
+            }
+        }
+        
+        // Show additional fields based on user type
+        function showAdditionalFields(userType) {
+            const additionalFields = document.getElementById('additionalFields');
+            additionalFields.innerHTML = '';
+            additionalFields.style.display = 'block';
+            
+            switch(userType) {
+                case 'farmer':
+                    additionalFields.innerHTML = `
+                        <div class="form-group">
+                            <label for="farmSize">Farm Size (acres)</label>
+                            <input type="number" id="farmSize" name="farmSize" placeholder="Enter farm size in acres">
+                        </div>
+                        <div class="form-group">
+                            <label for="crops">Main Crops Grown</label>
+                            <input type="text" id="crops" name="crops" placeholder="e.g., Rice, Wheat, Vegetables">
+                        </div>
+                    `;
+                    break;
+                    
+                case 'machinery_owner':
+                    additionalFields.innerHTML = `
+                        <div class="form-group">
+                            <label for="machineryList">Machinery Available</label>
+                            <textarea id="machineryList" name="machineryList" placeholder="List your machinery (e.g., Tractor, Harvester, etc.)"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="experience">Years of Experience</label>
+                            <input type="number" id="experience" name="experience" placeholder="Years of experience">
+                        </div>
+                    `;
+                    break;
+                    
+                case 'labour':
+                    additionalFields.innerHTML = `
+                        <div class="form-group">
+                            <label for="skills">Skills</label>
+                            <textarea id="skills" name="skills" placeholder="List your skills (e.g., Harvesting, Ploughing, etc.)"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="experience">Years of Experience</label>
+                            <input type="number" id="experience" name="experience" placeholder="Years of experience">
+                        </div>
+                        <div class="form-group">
+                            <label for="dailyRate">Expected Daily Rate (₹)</label>
+                            <input type="number" id="dailyRate" name="dailyRate" placeholder="Expected daily wage">
+                        </div>
+                    `;
+                    break;
+                    
+                default:
+                    additionalFields.style.display = 'none';
+            }
+        }
+
+        // ====== GOOGLE SIGN UP ======
+        function handleGoogleSignUp(response) {
+            console.log('Google Sign-Up response:', response);
+            
+            // Decode the JWT token to get user info
+            const payload = JSON.parse(atob(response.credential.split('.')[1]));
+            console.log('Google user payload:', payload);
+            
+            // Show loading message
+            showMessage('Creating account with Google...', 'info');
+            
+            // Check if user already exists
+            const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+            let user = users.find(u => u.email === payload.email);
+            
+            if (user) {
+                showMessage('Account already exists with this email. Please login instead.', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 3000);
+                return;
+            }
+            
+            // Create new user from Google info
+            user = {
+                userID: generateUserID('farmer'),
+                fullname: payload.name,
+                email: payload.email,
+                phone: '',
+                address: '',
+                userType: 'farmer',
+                password: 'google_oauth',
+                registrationDate: new Date().toISOString(),
+                status: 'active',
+                loginMethod: 'google',
+                picture: payload.picture,
+                emailVerified: true
+            };
+            
+            users.push(user);
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+            console.log('New user created from Google:', user);
+            
+            // Show success and redirect
+            handleRegistrationSuccess(user);
+        }
+
+        // Handle successful registration
+        function handleRegistrationSuccess(user) {
+            // Show success message and user ID
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('userIDDisplay').style.display = 'block';
+            document.getElementById('generatedUserID').textContent = user.userID;
+            document.getElementById('successText').textContent = `Welcome ${user.fullname}! Your account has been created. Redirecting to login...`;
+            
+            // Hide form
+            document.getElementById('registrationForm').style.display = 'none';
+            
+            // Redirect to login after 3 seconds
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 3000);
+        }
+
+        // Show message function
+        function showMessage(message, type = 'info') {
+            // Remove any existing messages
+            const existingMessage = document.querySelector('.temp-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            // Create new message
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `temp-message ${type}-message`;
+            messageDiv.style.cssText = `
+                padding: 12px 16px;
+                margin: 15px 0;
+                border-radius: 4px;
+                text-align: center;
+                font-weight: 500;
+                background: ${type === 'info' ? '#d1ecf1' : type === 'error' ? '#f8d7da' : '#d4edda'};
+                color: ${type === 'info' ? '#0c5460' : type === 'error' ? '#721c24' : '#155724'};
+                border-left: 4px solid ${type === 'info' ? '#17a2b8' : type === 'error' ? '#dc3545' : '#28a745'};
+            `;
+            messageDiv.textContent = message;
+            
+            // Insert after the success message
+            const successMessage = document.getElementById('successMessage');
+            successMessage.parentNode.insertBefore(messageDiv, successMessage.nextSibling);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.remove();
+                }
+            }, 5000);
+        }
+        
+        // Validate form
+        function validateForm() {
+            let isValid = true;
+            
+            // Reset error messages
+            document.querySelectorAll('.error-message').forEach(error => {
+                error.style.display = 'none';
+            });
+            
+            // Validate full name
+            const fullname = document.getElementById('fullname').value.trim();
+            if (fullname.length < 2) {
+                document.getElementById('nameError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate email
+            const email = document.getElementById('email').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            } else if (isEmailExists(email)) {
+                document.getElementById('emailError').textContent = 'Email already registered';
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate phone
+            const phone = document.getElementById('phone').value.trim();
+            const phoneRegex = /^[0-9]{10}$/;
+            if (!phoneRegex.test(phone)) {
+                document.getElementById('phoneError').style.display = 'block';
+                isValid = false;
+            } else if (isPhoneExists(phone)) {
+                document.getElementById('phoneError').textContent = 'Phone number already registered';
+                document.getElementById('phoneError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate address
+            const address = document.getElementById('address').value.trim();
+            if (address.length < 10) {
+                document.getElementById('addressError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate user type
+            const userType = document.getElementById('userType').value;
+            if (!userType) {
+                document.getElementById('userTypeError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password
+            const password = document.getElementById('password').value;
+            if (password.length < 6) {
+                document.getElementById('passwordError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate confirm password
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate terms
+            if (!document.getElementById('terms').checked) {
+                document.getElementById('termsError').style.display = 'block';
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        // Save user to localStorage
+        function saveUser(userData) {
+            const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+            users.push(userData);
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeUsers();
+
+            // Redirect away if user is already logged in
+            if (redirectIfLoggedIn()) return;
+            
+            // Password strength indicator
+            document.getElementById('password').addEventListener('input', function() {
+                checkPasswordStrength(this.value);
+            });
+            
+            // Show additional fields based on user type
+            document.getElementById('userType').addEventListener('change', function() {
+                showAdditionalFields(this.value);
+            });
+            
+            // Form submission
+            document.getElementById('registrationForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    // Get form data
+                    const formData = {
+                        userID: generateUserID(document.getElementById('userType').value),
+                        fullname: document.getElementById('fullname').value.trim(),
+                        email: document.getElementById('email').value.trim(),
+                        phone: document.getElementById('phone').value.trim(),
+                        address: document.getElementById('address').value.trim(),
+                        userType: document.getElementById('userType').value,
+                        password: document.getElementById('password').value,
+                        registrationDate: new Date().toISOString(),
+                        status: 'active',
+                        loginMethod: 'email'
+                    };
+                    
+                    // Add additional fields based on user type
+                    const userType = formData.userType;
+                    if (userType === 'farmer') {
+                        formData.farmSize = document.getElementById('farmSize')?.value || '';
+                        formData.crops = document.getElementById('crops')?.value || '';
+                    } else if (userType === 'machinery_owner') {
+                        formData.machineryList = document.getElementById('machineryList')?.value || '';
+                        formData.experience = document.getElementById('experience')?.value || '';
+                    } else if (userType === 'labour') {
+                        formData.skills = document.getElementById('skills')?.value || '';
+                        formData.experience = document.getElementById('experience')?.value || '';
+                        formData.dailyRate = document.getElementById('dailyRate')?.value || '';
+                    }
+                    
+                    // Save user data
+                    saveUser(formData);
+                    
+                    // Show success and redirect
+                    handleRegistrationSuccess(formData);
+                }
+            });
+            
+            // Check Facebook button visibility periodically
+            setInterval(ensureFacebookButtonVisible, 2000);
+            setInterval(updateDebugInfo, 3000);
+        });
+    </script>
+</body>
+</html>

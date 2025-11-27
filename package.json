@@ -1,0 +1,20 @@
+{
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.19.2",
+    "path-to-regexp": "^8.3.0",
+    "uuid": "^13.0.0"
+  }
+}

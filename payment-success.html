@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Success - FarmConnect</title>
+    <style>
+        .success-container {
+            max-width: 500px;
+            margin: 100px auto;
+            padding: 40px;
+            text-align: center;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .success-icon {
+            font-size: 64px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">✅</div>
+        <h2>Payment Successful!</h2>
+        <p>Your labour booking has been confirmed.</p>
+        <p>Payment ID: <span id="paymentId"></span></p>
+        <button onclick="window.location.href = 'dashboard.html'" 
+                style="padding: 12px 30px; background: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 20px;">
+            Go to Dashboard
+        </button>
+    </div>
+
+    <script>
+        // Get payment ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentId = urlParams.get('payment_id');
+        document.getElementById('paymentId').textContent = paymentId;
+        
+        // Save to localStorage
+        const paymentData = {
+            id: paymentId,
+            amount: 590,
+            date: new Date().toISOString(),
+            status: 'completed'
+        };
+        localStorage.setItem('last_payment', JSON.stringify(paymentData));
+    </script>
+</body>
+</html>

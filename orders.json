@@ -1,0 +1,49 @@
+[
+  {
+    "customer": {
+      "fullName": "DEEPJOY Hazari",
+      "email": "ddwdwdw133@gmail.com",
+      "phone": "09316551269"
+    },
+    "items": [
+      {
+        "id": "power-tiller",
+        "name": "Kubota PEM140DI Power Tiller",
+        "price": 400,
+        "type": "machinery"
+      }
+    ],
+    "orderDate": "2025-10-31T18:20:06.218Z",
+    "orderId": "FC1761934806218",
+    "payment": {
+      "method": "upi",
+      "amount": 2550
+    },
+    "status": "confirmed",
+    "total": 2550
+  },
+  {
+    "customer": {
+      "fullName": "Sarkar Dsa",
+      "email": "ddwdww1234@gmail.com",
+      "phone": "09862178469",
+      "address": "fr"
+    },
+    "items": [
+      {
+        "id": "john-deere-5050d",
+        "name": "John Deere 5050D Tractor",
+        "price": 800,
+        "type": "machinery"
+      }
+    ],
+    "orderDate": "2025-10-31T18:23:32.771Z",
+    "orderId": "FC1761935081277",
+    "payment": {
+      "method": "netbanking",
+      "amount": 2400
+    },
+    "status": "confirmed",
+    "total": 2400
+  }
+]
